@@ -1,54 +1,79 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>My Site</title>
+  <title>Access Required</title>
   <style>
     body {
+      background-color: black;
+      color: #00ff00;
+      font-family: monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f7fa;
-      color: #222;
+    }
+
+    #box {
       text-align: center;
     }
 
-    .container {
-      margin-top: 100px;
-    }
-
-    h1 {
-      font-size: 40px;
-      margin-bottom: 10px;
-    }
-
-    p {
-      color: #555;
-      font-size: 18px;
+    input {
+      background: black;
+      border: 1px solid #00ff00;
+      color: #00ff00;
+      padding: 10px;
+      font-size: 16px;
+      outline: none;
     }
 
     button {
-      margin-top: 20px;
-      padding: 12px 24px;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      background: #4a90e2;
-      color: white;
+      background: black;
+      border: 1px solid #00ff00;
+      color: #00ff00;
+      padding: 10px;
+      margin-top: 10px;
       cursor: pointer;
-      transition: 0.2s;
     }
 
     button:hover {
-      background: #357abd;
+      background: #003300;
     }
   </style>
 </head>
+
 <body>
+  <div id="box">
+    <h2>Enter Password</h2>
 
-<div class="container">
-  <h1>Welcome</h1>
-  <p>Click the button to start</p>
-  <button onclick="alert('W')">Start</button>
-</div>
+    <input type="password" id="password" placeholder="Password">
 
+    <br>
+    <button onclick="checkPassword()">Enter</button>
+
+    <p id="message"></p>
+  </div>
+
+  <script>
+    const input = document.getElementById("password");
+
+    function checkPassword() {
+      const correctPassword = "TripleT";
+      const value = input.value;
+
+      if (value === correctPassword) {
+        window.location.href = "home.html";
+      } else {
+        document.getElementById("message").textContent = "Access Denied";
+      }
+    }
+
+    // 👇 Press Enter to submit
+    input.addEventListener("keydown", function(event) {
+      if (event.key === "Enter") {
+        checkPassword();
+      }
+    });
+  </script>
 </body>
 </html>
