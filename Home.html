@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Access Required</title>
+
+  <style>
+    body {
+      background: black;
+      color: #00ff00;
+      font-family: monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    #box {
+      text-align: center;
+      transition: opacity 0.6s ease;
+    }
+
+    input {
+      background: black;
+      border: 1px solid #00ff00;
+      color: #00ff00;
+      padding: 10px;
+      outline: none;
+    }
+
+    button {
+      margin-top: 10px;
+      background: black;
+      border: 1px solid #00ff00;
+      color: #00ff00;
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    #message {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="box">
+    <h2>Enter Password</h2>
+    <input type="password" id="password" placeholder="Password">
+    <br>
+    <button onclick="checkPassword()">Enter</button>
+    <p id="message"></p>
+  </div>
+
+  <script>
+    const input = document.getElementById("password");
+    const box = document.getElementById("box");
+
+    function enterSite() {
+      box.style.opacity = "0";
+
+      setTimeout(() => {
+        window.location.href = "home.html";
+      }, 600);
+    }
+
+    function checkPassword() {
+      const correctPassword = "TripleT";
+
+      if (input.value === correctPassword) {
+        enterSite();
+      } else {
+        document.getElementById("message").textContent = "Access Denied";
+      }
+    }
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") checkPassword();
+    });
+  </script>
+</body>
+</html>
