@@ -1,83 +1,135 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Access Required</title>
+<meta charset="UTF-8">
+<div class="title">Boi</div>
 
-  <style>
-    body {
-      background: black;
-      color: #00ff00;
-      font-family: monospace;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      overflow: hidden;
-    }
+<style>
+body {
+  margin: 0;
+  background: black;
+  color: white;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
 
-    #box {
-      text-align: center;
-      transition: opacity 0.6s ease;
-    }
+/* STAR BACKGROUND */
+.stars {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
 
-    input {
-      background: black;
-      border: 1px solid #00ff00;
-      color: #00ff00;
-      padding: 10px;
-      outline: none;
-    }
+.star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: white;
+  opacity: 0.8;
+  animation: float 5s linear infinite;
+}
 
-    button {
-      margin-top: 10px;
-      background: black;
-      border: 1px solid #00ff00;
-      color: #00ff00;
-      padding: 10px;
-      cursor: pointer;
-    }
+@keyframes float {
+  from { transform: translateY(0); }
+  to { transform: translateY(100vh); }
+}
 
-    #message {
-      margin-top: 10px;
-    }
-  </style>
+/* LOGO */
+.logo {
+  display: block;
+  margin: 30px auto 10px;
+  width: 90px;
+  height: 90px;
+  border-radius: 18px;
+  box-shadow: 0 0 20px purple;
+}
+
+/* TITLE */
+.title {
+  text-align: center;
+  font-size: 45px;
+  color: purple;
+  text-shadow:
+    0 0 5px purple,
+    0 0 10px purple,
+    0 0 25px #b300ff;
+  margin: 10px 0 30px;
+}
+
+/* SHORTCUT LIST */
+.shortcuts {
+  text-align: center;
+  font-size: 20px;
+  line-height: 2.5;
+}
+
+.shortcuts a {
+  color: white;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: 0.2s;
+}
+
+.shortcuts a:hover {
+  color: purple;
+  text-shadow: 0 0 10px purple;
+}
+
+/* ICONS */
+.icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+}
+</style>
 </head>
 
 <body>
-  <div id="box">
-    <h2>Enter Password</h2>
-    <input type="password" id="password" placeholder="Password">
-    <br>
-    <button onclick="checkPassword()">Enter</button>
-    <p id="message"></p>
-  </div>
 
-  <script>
-    const input = document.getElementById("password");
-    const box = document.getElementById("box");
+<div class="stars" id="stars"></div>
 
-    function enterSite() {
-      box.style.opacity = "0";
+<img class="logo" src="logo.png" alt="logo">
 
-      setTimeout(() => {
-        window.location.href = "home.html";
-      }, 600);
-    }
+<div class="title">Your Site</div>
 
-    function checkPassword() {
-      const correctPassword = "TripleT";
+<div class="shortcuts">
 
-      if (input.value === correctPassword) {
-        enterSite();
-      } else {
-        document.getElementById("message").textContent = "Access Denied";
-      }
-    }
+  <a href="https://youtube.com" target="_blank">
+    <img class="icon" src="https://www.google.com/s2/favicons?domain=youtube.com">
+    YouTube
+  </a><br>
 
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") checkPassword();
-    });
-  </script>
+  <a href="https://google.com" target="_blank">
+    <img class="icon" src="https://www.google.com/s2/favicons?domain=google.com">
+    Google
+  </a><br>
+
+  <a href="https://discord.com" target="_blank">
+    <img class="icon" src="https://www.google.com/s2/favicons?domain=discord.com">
+    Discord
+  </a><br>
+
+  <a href="https://github.com" target="_blank">
+    <img class="icon" src="https://www.google.com/s2/favicons?domain=github.com">
+    GitHub
+  </a>
+
+</div>
+
+<script>
+const stars = document.getElementById("stars");
+
+for (let i = 0; i < 80; i++) {
+  let s = document.createElement("div");
+  s.className = "star";
+  s.style.left = Math.random() * 100 + "vw";
+  s.style.top = Math.random() * 100 + "vh";
+  s.style.animationDuration = (2 + Math.random() * 5) + "s";
+  stars.appendChild(s);
+}
+</script>
+
 </body>
 </html>
