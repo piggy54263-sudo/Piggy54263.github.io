@@ -18,7 +18,7 @@ body {
   position: fixed;
   width: 100%;
   height: 100%;
-  pointer-events: none; /* IMPORTANT FIX */
+  pointer-events: none;
 }
 
 .star {
@@ -38,9 +38,9 @@ body {
 /* LOGO */
 .logo {
   display: block;
-  margin: 30px auto 10px;
-  width: 90px;
-  height: 90px;
+  margin: 20px auto 5px;
+  width: 85px;
+  height: 85px;
   border-radius: 18px;
   box-shadow: 0 0 20px purple;
 }
@@ -50,41 +50,51 @@ body {
   text-align: center;
   font-size: 45px;
   color: purple;
-  text-shadow:
-    0 0 5px purple,
-    0 0 10px purple,
-    0 0 25px #b300ff,
-    0 0 40px #b300ff;
-  margin: 10px 0 30px;
+  text-shadow: 0 0 10px purple, 0 0 25px #b300ff;
+  margin: 5px 0 15px;
 }
 
-/* SHORTCUTS */
+/* BUTTON SHORTCUTS */
 .shortcuts {
-  text-align: center;
-  font-size: 20px;
-  line-height: 2.5;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
-.shortcuts a {
+.btn {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid purple;
   color: white;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 10px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 0 10px purple;
   transition: 0.2s;
 }
 
-.shortcuts a:hover {
-  color: purple;
-  text-shadow: 0 0 10px purple;
+.btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px purple;
 }
 
 /* ICONS */
 .icon {
-  width: 20px;
-  height: 20px;
-  border-radius: 5px;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+}
+
+/* IFRAME */
+.viewer {
+  width: 100%;
+  height: calc(100vh - 200px);
+  border: none;
+  background: white;
 }
 </style>
 </head>
@@ -93,43 +103,46 @@ body {
 
 <div class="stars" id="stars"></div>
 
-<img class="logo" src="logo.png" alt="logo">
-
+<!-- 🔥 ONLY TITLE -->
 <div class="title">Boi</div>
 
+<!-- 🔥 LOGO (CHANGE THIS FILE) -->
+<img class="logo" src="https://postimg.cc/Y4TB3xkY" alt="logo">
+
+<!-- BUTTONS -->
 <div class="shortcuts">
 
-  <div>
-    <a href="https://youtube.com" target="_blank">
-      <img class="icon" src="https://www.google.com/s2/favicons?domain=youtube.com">
-      YouTube
-    </a>
+  <div class="btn" onclick="openSite('https://www.youtube.com')">
+    <img class="icon" src="https://www.google.com/s2/favicons?domain=youtube.com">
+    YouTube
   </div>
 
-  <div>
-    <a href="https://google.com" target="_blank">
-      <img class="icon" src="https://www.google.com/s2/favicons?domain=google.com">
-      Google
-    </a>
+  <div class="btn" onclick="openSite('https://www.google.com')">
+    <img class="icon" src="https://www.google.com/s2/favicons?domain=google.com">
+    Google
   </div>
 
-  <div>
-    <a href="https://discord.com" target="_blank">
-      <img class="icon" src="https://www.google.com/s2/favicons?domain=discord.com">
-      Discord
-    </a>
+  <div class="btn" onclick="openSite('https://discord.com')">
+    <img class="icon" src="https://www.google.com/s2/favicons?domain=discord.com">
+    Discord
   </div>
 
-  <div>
-    <a href="https://github.com" target="_blank">
-      <img class="icon" src="https://www.google.com/s2/favicons?domain=github.com">
-      GitHub
-    </a>
+  <div class="btn" onclick="openSite('https://github.com')">
+    <img class="icon" src="https://www.google.com/s2/favicons?domain=github.com">
+    GitHub
   </div>
 
 </div>
 
+<!-- WEBSITE VIEWER -->
+<iframe class="viewer" id="viewer"></iframe>
+
 <script>
+function openSite(url) {
+  document.getElementById("viewer").src = url;
+}
+
+/* STARS */
 const stars = document.getElementById("stars");
 
 for (let i = 0; i < 80; i++) {
