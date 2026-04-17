@@ -71,18 +71,27 @@ body {
   box-shadow: 0 0 25px purple;
 }
 
-/* VIEWER */
-.viewer {
+/* CONTENT AREA */
+#content {
   width: 100%;
-  height: calc(100vh - 200px);
+  height: calc(100vh - 180px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* IFRAME */
+.viewer {
+  width: 95%;
+  height: 95%;
   border: none;
+  border-radius: 10px;
 }
 
 /* MESSAGE */
 .message {
-  text-align: center;
-  margin-top: 40px;
   color: gray;
+  font-size: 18px;
 }
 </style>
 </head>
@@ -116,7 +125,7 @@ function openYouTube() {
 function blocked() {
   document.getElementById("content").innerHTML =
     `<div class="message">
-      This site can't be opened inside here (blocked by browser).
+      This site can’t be displayed here.
     </div>`;
 }
 
