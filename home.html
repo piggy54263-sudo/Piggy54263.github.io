@@ -9,7 +9,7 @@ body {
   margin: 0;
   background: black;
   color: white;
-  font-family: Arial, sans-serif;
+  font-family: Arial;
   overflow: hidden;
 }
 
@@ -26,7 +26,6 @@ body {
   width: 2px;
   height: 2px;
   background: white;
-  opacity: 0.8;
   animation: float 5s linear infinite;
 }
 
@@ -40,8 +39,7 @@ body {
   text-align: center;
   font-size: 45px;
   color: purple;
-  text-shadow: 0 0 10px purple, 0 0 25px #b300ff;
-  margin: 10px 0;
+  text-shadow: 0 0 15px purple;
 }
 
 /* LOGO */
@@ -49,8 +47,7 @@ body {
   display: block;
   margin: 10px auto;
   width: 85px;
-  height: 85px;
-  border-radius: 18px;
+  border-radius: 15px;
   box-shadow: 0 0 20px purple;
 }
 
@@ -59,33 +56,19 @@ body {
   display: flex;
   justify-content: center;
   gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
 }
 
 .btn {
   background: rgba(255,255,255,0.05);
   border: 1px solid purple;
-  color: white;
-  padding: 10px 14px;
+  padding: 10px;
   border-radius: 10px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
   box-shadow: 0 0 10px purple;
-  transition: 0.2s;
 }
 
 .btn:hover {
-  transform: scale(1.05);
   box-shadow: 0 0 25px purple;
-}
-
-/* ICON */
-.icon {
-  width: 18px;
-  height: 18px;
 }
 
 /* VIEWER */
@@ -93,7 +76,13 @@ body {
   width: 100%;
   height: calc(100vh - 200px);
   border: none;
-  background: white;
+}
+
+/* MESSAGE */
+.message {
+  text-align: center;
+  margin-top: 40px;
+  color: gray;
 }
 </style>
 </head>
@@ -103,50 +92,32 @@ body {
 <div class="stars" id="stars"></div>
 
 <div class="title">Boi</div>
-
 <img class="logo" src="logo.png">
 
 <div class="shortcuts">
-
-  <div class="btn" onclick="openSite('https://www.youtube.com')">
-    <img class="icon" src="https://www.google.com/s2/favicons?domain=youtube.com">
-    YouTube
-  </div>
-
-  <div class="btn" onclick="openSite('https://www.google.com')">
-    <img class="icon" src="https://www.google.com/s2/favicons?domain=google.com">
-    Google
-  </div>
-
-  <div class="btn" onclick="openSite('https://discord.com')">
-    <img class="icon" src="https://www.google.com/s2/favicons?domain=discord.com">
-    Discord
-  </div>
-
-  <div class="btn" onclick="openSite('https://github.com')">
-    <img class="icon" src="https://www.google.com/s2/favicons?domain=github.com">
-    GitHub
-  </div>
-
+  <div class="btn" onclick="openYouTube()">YouTube</div>
+  <div class="btn" onclick="blocked()">Google</div>
+  <div class="btn" onclick="blocked()">Discord</div>
+  <div class="btn" onclick="blocked()">GitHub</div>
 </div>
 
-<iframe class="viewer" id="viewer"></iframe>
+<div id="content">
+  <div class="message">Click a shortcut</div>
+</div>
 
 <script>
-function openSite(url) {
-  const viewer = document.getElementById("viewer");
-  viewer.src = url;
+function openYouTube() {
+  document.getElementById("content").innerHTML =
+    `<iframe class="viewer"
+      src="https://www.youtube.com/embed?listType=mostPopular"
+      allowfullscreen></iframe>`;
+}
 
-  // fallback if site blocks iframe
-  setTimeout(() => {
-    try {
-      if (!viewer.contentWindow.location.href.includes(url)) {
-        window.open(url, "_blank");
-      }
-    } catch {
-      window.open(url, "_blank");
-    }
-  }, 1000);
+function blocked() {
+  document.getElementById("content").innerHTML =
+    `<div class="message">
+      This site can't be opened inside here (blocked by browser).
+    </div>`;
 }
 
 /* STARS */
@@ -157,7 +128,6 @@ for (let i = 0; i < 80; i++) {
   s.className = "star";
   s.style.left = Math.random() * 100 + "vw";
   s.style.top = Math.random() * 100 + "vh";
-  s.style.animationDuration = (2 + Math.random() * 5) + "s";
   stars.appendChild(s);
 }
 </script>
