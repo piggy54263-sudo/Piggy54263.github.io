@@ -1,144 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Boi</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Home</title>
 
 <style>
-body {
-  margin: 0;
-  background: black;
-  color: white;
-  font-family: Arial;
-  overflow: hidden;
-}
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-/* STARS */
-.stars {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
+  body {
+    height: 100vh;
+    overflow: hidden;
+    background: black;
+    font-family: Arial, sans-serif;
+    color: white;
+  }
 
-.star {
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  background: white;
-  animation: float 5s linear infinite;
-}
+  /* STAR BACKGROUND */
+  .stars {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: black;
+    overflow: hidden;
+  }
 
-@keyframes float {
-  from { transform: translateY(0); }
-  to { transform: translateY(100vh); }
-}
+  .stars::after {
+    content: "";
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(white 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: moveStars 60s linear infinite;
+    opacity: 0.15;
+  }
 
-/* TITLE */
-.title {
-  text-align: center;
-  font-size: 45px;
-  color: purple;
-  text-shadow: 0 0 15px purple;
-}
+  @keyframes moveStars {
+    from { transform: translateY(0); }
+    to { transform: translateY(-500px); }
+  }
 
-/* LOGO */
-.logo {
-  display: block;
-  margin: 10px auto;
-  width: 85px;
-  border-radius: 15px;
-  box-shadow: 0 0 20px purple;
-}
+  /* MAIN UI */
+  .container {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 20px;
+  }
 
-/* BUTTONS */
-.shortcuts {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-}
+  h1 {
+    font-size: 40px;
+    letter-spacing: 2px;
+  }
 
-.btn {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid purple;
-  padding: 10px;
-  border-radius: 10px;
-  cursor: pointer;
-  box-shadow: 0 0 10px purple;
-}
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 140px);
+    gap: 15px;
+  }
 
-.btn:hover {
-  box-shadow: 0 0 25px purple;
-}
+  button {
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.1);
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+    backdrop-filter: blur(8px);
+  }
 
-/* CONTENT AREA */
-#content {
-  width: 100%;
-  height: calc(100vh - 180px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+  button:hover {
+    background: rgba(255,255,255,0.25);
+    transform: scale(1.05);
+  }
 
-/* IFRAME */
-.viewer {
-  width: 95%;
-  height: 95%;
-  border: none;
-  border-radius: 10px;
-}
+  /* POPUP */
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    z-index: 10;
+    justify-content: center;
+    align-items: center;
+  }
 
-/* MESSAGE */
-.message {
-  color: gray;
-  font-size: 18px;
-}
+  .modal iframe {
+    width: 90%;
+    height: 85%;
+    border: none;
+    border-radius: 12px;
+  }
+
+  .close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 30px;
+    cursor: pointer;
+  }
 </style>
 </head>
 
 <body>
 
-<div class="stars" id="stars"></div>
+<div class="stars"></div>
 
-<div class="title">Boi</div>
-<img class="logo" src="logo.png">
+<div class="container">
+  <h1>My Home</h1>
 
-<div class="shortcuts">
-  <div class="btn" onclick="openYouTube()">YouTube</div>
-  <div class="btn" onclick="blocked()">Google</div>
-  <div class="btn" onclick="blocked()">Discord</div>
-  <div class="btn" onclick="blocked()">GitHub</div>
+  <div class="grid">
+    <button onclick="openSite('https://www.youtube.com/embed/dQw4w9WgXcQ')">
+      YouTube
+    </button>
+
+    <button onclick="openSite('https://example.com')">
+      Site 2
+    </button>
+
+    <button onclick="openSite('https://example.com')">
+      Site 3
+    </button>
+  </div>
 </div>
 
-<div id="content">
-  <div class="message">Click a shortcut</div>
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <span class="close" onclick="closeSite()">✖</span>
+  <iframe id="frame"></iframe>
 </div>
 
 <script>
-function openYouTube() {
-  document.getElementById("content").innerHTML =
-    `<iframe class="viewer"
-      src="https://www.youtube.com/embed?listType=mostPopular"
-      allowfullscreen></iframe>`;
-}
+  function openSite(url) {
+    document.getElementById("frame").src = url;
+    document.getElementById("modal").style.display = "flex";
+  }
 
-function blocked() {
-  document.getElementById("content").innerHTML =
-    `<div class="message">
-      This site can’t be displayed here.
-    </div>`;
-}
-
-/* STARS */
-const stars = document.getElementById("stars");
-
-for (let i = 0; i < 80; i++) {
-  let s = document.createElement("div");
-  s.className = "star";
-  s.style.left = Math.random() * 100 + "vw";
-  s.style.top = Math.random() * 100 + "vh";
-  stars.appendChild(s);
-}
+  function closeSite() {
+    document.getElementById("frame").src = "";
+    document.getElementById("modal").style.display = "none";
+  }
 </script>
 
 </body>
