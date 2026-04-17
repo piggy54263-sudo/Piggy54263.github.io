@@ -35,31 +35,31 @@ body {
   to { transform: translateY(100vh); }
 }
 
-/* LOGO */
-.logo {
-  display: block;
-  margin: 20px auto 5px;
-  width: 85px;
-  height: 85px;
-  border-radius: 18px;
-  box-shadow: 0 0 20px purple;
-}
-
 /* TITLE */
 .title {
   text-align: center;
   font-size: 45px;
   color: purple;
   text-shadow: 0 0 10px purple, 0 0 25px #b300ff;
-  margin: 5px 0 15px;
+  margin: 10px 0;
 }
 
-/* BUTTON SHORTCUTS */
+/* LOGO */
+.logo {
+  display: block;
+  margin: 10px auto;
+  width: 85px;
+  height: 85px;
+  border-radius: 18px;
+  box-shadow: 0 0 20px purple;
+}
+
+/* BUTTONS */
 .shortcuts {
   display: flex;
   justify-content: center;
-  flex-wrap: wrap;
   gap: 10px;
+  flex-wrap: wrap;
   margin-bottom: 10px;
 }
 
@@ -82,14 +82,13 @@ body {
   box-shadow: 0 0 25px purple;
 }
 
-/* ICONS */
+/* ICON */
 .icon {
   width: 18px;
   height: 18px;
-  border-radius: 4px;
 }
 
-/* IFRAME */
+/* VIEWER */
 .viewer {
   width: 100%;
   height: calc(100vh - 200px);
@@ -103,13 +102,10 @@ body {
 
 <div class="stars" id="stars"></div>
 
-<!-- 🔥 ONLY TITLE -->
 <div class="title">Boi</div>
 
-<!-- 🔥 LOGO (CHANGE THIS FILE) -->
-<img class="logo" src="https://postimg.cc/Y4TB3xkY" alt="logo">
+<img class="logo" src="logo.png">
 
-<!-- BUTTONS -->
 <div class="shortcuts">
 
   <div class="btn" onclick="openSite('https://www.youtube.com')">
@@ -134,12 +130,23 @@ body {
 
 </div>
 
-<!-- WEBSITE VIEWER -->
 <iframe class="viewer" id="viewer"></iframe>
 
 <script>
 function openSite(url) {
-  document.getElementById("viewer").src = url;
+  const viewer = document.getElementById("viewer");
+  viewer.src = url;
+
+  // fallback if site blocks iframe
+  setTimeout(() => {
+    try {
+      if (!viewer.contentWindow.location.href.includes(url)) {
+        window.open(url, "_blank");
+      }
+    } catch {
+      window.open(url, "_blank");
+    }
+  }, 1000);
 }
 
 /* STARS */
