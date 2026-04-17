@@ -1,79 +1,114 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Access Required</title>
-  <style>
-    body {
-      background-color: black;
-      color: #00ff00;
-      font-family: monospace;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Access</title>
+    <style>
+        :root {
+            --glass: rgba(255, 255, 255, 0.05);
+            --accent: #00d4ff;
+        }
 
-    #box {
-      text-align: center;
-    }
+        body, html {
+            margin: 0; padding: 0;
+            width: 100vw; height: 100vh;
+            overflow: hidden;
+            background: #000;
+            font-family: 'Inter', sans-serif;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-    input {
-      background: black;
-      border: 1px solid #00ff00;
-      color: #00ff00;
-      padding: 10px;
-      font-size: 16px;
-      outline: none;
-    }
+        /* Starfield Background */
+        .stars {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 200%;
+            background: radial-gradient(circle at center, #111 0%, #000 100%);
+            z-index: 0;
+        }
+        .stars::after {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 50%;
+            background-image: radial-gradient(1px 1px at 10% 10%, #fff, transparent),
+                              radial-gradient(1px 1px at 50% 50%, #fff, transparent),
+                              radial-gradient(1px 1px at 90% 20%, #fff, transparent);
+            background-size: 300px 300px;
+            animation: move 60s linear infinite;
+        }
+        @keyframes move { from { transform: translateY(0); } to { transform: translateY(-100%); } }
 
-    button {
-      background: black;
-      border: 1px solid #00ff00;
-      color: #00ff00;
-      padding: 10px;
-      margin-top: 10px;
-      cursor: pointer;
-    }
+        /* Login Box */
+        .login-card {
+            position: relative;
+            z-index: 10;
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            padding: 3rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
+        }
 
-    button:hover {
-      background: #003300;
-    }
-  </style>
+        input {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 1rem;
+            color: white;
+            font-size: 1rem;
+            border-radius: 4px;
+            outline: none;
+            margin-bottom: 1rem;
+            width: 250px;
+            transition: border 0.3s;
+        }
+
+        input:focus { border-color: var(--accent); }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: var(--accent);
+            color: black;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover { opacity: 0.9; }
+    </style>
 </head>
-
 <body>
-  <div id="box">
-    <h2>Enter Password</h2>
+    <div class="stars"></div>
+    
+    <div class="login-card">
+        <h2>IDENTIFICATION REQUIRED</h2>
+        <input type="password" id="passInput" placeholder="Enter Access Code">
+        <button onclick="checkPass()">Authorize</button>
+    </div>
 
-    <input type="password" id="password" placeholder="Password">
+    <script>
+        function checkPass() {
+            const code = document.getElementById('passInput').value;
+            // Strict case-sensitive check for "TripleT"
+            if (code === "TripleT") {
+                window.location.href = "home.html";
+            } else {
+                alert("ACCESS DENIED");
+                document.getElementById('passInput').value = "";
+            }
+        }
 
-    <br>
-    <button onclick="checkPassword()">Enter</button>
-
-    <p id="message"></p>
-  </div>
-
-  <script>
-    const input = document.getElementById("password");
-
-    function checkPassword() {
-      const correctPassword = "TripleT";
-      const value = input.value;
-
-      if (value === correctPassword) {
-        window.location.href = "home.html";
-      } else {
-        document.getElementById("message").textContent = "Access Denied";
-      }
-    }
-
-    // 👇 Press Enter to submit
-    input.addEventListener("keydown", function(event) {
-      if (event.key === "Enter") {
-        checkPassword();
-      }
-    });
-  </script>
+        // Allow "Enter" key to submit
+        document.getElementById('passInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') checkPass();
+        });
+    </script>
 </body>
 </html>
