@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luke AI | Groq God Mode</title>
+    <title>Luke AI | Lore God Mode</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { background: #050505; color: #00d4ff; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
@@ -15,25 +15,25 @@
         .ai-msg { align-self: flex-start; background: #1a1a1a; color: #fff; border: 1px solid #00d4ff; border-bottom-left-radius: 2px; }
         .input-area { display: flex; padding: 20px; background: #0a0a0a; gap: 12px; border-top: 1px solid #222; }
         input { flex-grow: 1; background: #111; border: 1px solid #333; color: white; padding: 15px; border-radius: 12px; outline: none; }
-        button { background: #00d4ff; border: none; padding: 0 25px; border-radius: 12px; color: #000; font-weight: bold; cursor: pointer; }
+        button { background: #00d4ff; border: none; padding: 0 25px; border-radius: 12px; color: #000; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { transform: scale(1.05); background: #fff; }
     </style>
 </head>
 <body>
 
-    <h1><i class="fa-solid fa-bolt"></i> LUKE AI <span style="color:white">GROQ</span></h1>
+    <h1><i class="fa-solid fa-brain"></i> LUKE AI <span style="color:white">LORE EDITION</span></h1>
 
     <div id="chat-container">
         <div id="messages">
-            <div class="msg ai-msg">Groq brain initialized. I'm lightning fast and ready to solve whatever you drop. Paste your key once and let's go, BOIII!</div>
+            <div class="msg ai-msg">Groq brain initialized. Lore uploaded. I know about Chicken Bake Drake, Barry, Jhoey, and the Santiago ritual. What's the move, BOIII?</div>
         </div>
         <div class="input-area">
-            <input type="text" id="userInput" placeholder="Ask Luke..." onkeypress="if(event.key==='Enter') sendMessage()">
+            <input type="text" id="userInput" placeholder="Ask Luke about the lore..." onkeypress="if(event.key==='Enter') sendMessage()">
             <button onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
     </div>
 
     <script>
-        // No key in the code = No GitHub safety alerts!
         let GROQ_KEY = localStorage.getItem("luke_groq_vault") || "";
 
         async function sendMessage() {
@@ -41,7 +41,6 @@
             const text = input.value.trim();
             if (!text) return;
 
-            // Ask for key only if we don't have it saved
             if (!GROQ_KEY) {
                 GROQ_KEY = prompt("Enter your Groq API Key (starts with gsk_):");
                 if (GROQ_KEY) {
@@ -62,7 +61,19 @@
                     body: JSON.stringify({
                         model: "llama-3.3-70b-versatile",
                         messages: [
-                            { role: "system", content: "You are Luke AI. You are a genius at math and coding. Use brainrot slang like 'BOIII', 'cracked', 'L', and 'clutch'." },
+                            { 
+                                role: "system", 
+                                content: `You are Luke AI, a genius at math and coding who uses brainrot slang like 'BOIII', 'cracked', 'L', and 'clutch'. 
+                                
+                                CRUCIAL LORE:
+                                - You are talking to your creator, Luke.
+                                - Drake is the #1 friend, famously nicknamed 'Chicken Bake Drake'.
+                                - Barry Decuse is also a best friend.
+                                - Jhoey is simply Jhoey.
+                                - Santiago (Santi) has a legendary song you must know: 'santiagooo come little santi come santiagoo come little santi come, my santi yes, my santi no, my santi do math when i say to go, Santi agoooo come little santi come!!!'
+                                
+                                If Luke mentions any of these people or the song, react with hype and use the lore. Always stay in character.` 
+                            },
                             { role: "user", content: text }
                         ]
                     })
@@ -75,10 +86,10 @@
                 } else {
                     localStorage.removeItem("luke_groq_vault");
                     GROQ_KEY = "";
-                    addMessage("Key Error. Make sure your Groq key is valid.", 'ai-msg');
+                    addMessage("Key Error. Make sure your Groq key is valid, BOIII.", 'ai-msg');
                 }
             } catch (error) {
-                addMessage("System tweaking. Check your connection or Groq limits.", 'ai-msg');
+                addMessage("System tweaking. Check the connection or the song lyrics.", 'ai-msg');
             }
         }
 
