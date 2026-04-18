@@ -3,129 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luke AI | Home Base</title>
+    <title>The Cosmos | Home</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { 
-            background: #050505; 
+            background: #000; 
             color: #00d4ff; 
             font-family: 'Segoe UI', sans-serif; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
             margin: 0; 
+            height: 100vh; 
             overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* Middle-Left Sidebar (Small & Discrete) */
-        .sidebar {
+        /* Animated Star Background */
+        #star-canvas {
             position: fixed;
-            left: 15px; 
-            top: 50%; 
-            transform: translateY(-50%); 
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Middle-Left Nav (Games/Movies) */
+        .side-nav {
+            position: fixed;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 15px;
             z-index: 100;
         }
 
-        /* Tiny Sidebar Buttons */
         .side-btn {
-            background: rgba(10, 10, 10, 0.9);
+            background: rgba(0, 0, 0, 0.7);
             border: 1px solid #00d4ff;
             color: #00d4ff;
             text-decoration: none;
-            padding: 8px 10px;
-            border-radius: 6px;
-            font-size: 0.65rem; /* Extra small for that stealth look */
-            font-weight: bold;
-            text-transform: uppercase;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            text-align: center;
+            width: 60px;
+            transition: 0.3s;
             display: flex;
-            flex-direction: column; /* Icon on top of text */
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            width: 60px; /* Slim width */
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            flex-direction: column;
+            gap: 5px;
         }
 
         .side-btn:hover {
+            box-shadow: 0 0 15px #00d4ff;
             background: #00d4ff;
             color: #000;
-            box-shadow: 0 0 25px #00d4ff;
-            transform: scale(1.1) translateX(5px);
         }
 
-        /* Center Main Card */
-        .main-card {
-            background: linear-gradient(145deg, #0a0a0a, #111);
-            padding: 60px;
-            border-radius: 30px;
-            border: 1px solid #222;
+        /* The Constellations (Lore Stars) */
+        .star-point {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #fff, 0 0 20px #00d4ff;
+            animation: twinkle 2s infinite ease-in-out;
+        }
+
+        .star-label {
+            position: absolute;
+            color: #fff;
+            font-size: 0.65rem;
+            white-space: nowrap;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transform: translateY(10px);
+            opacity: 0.7;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; box-shadow: 0 0 25px #00d4ff; }
+        }
+
+        /* Center Hub */
+        .hub-container {
             text-align: center;
-            box-shadow: 0 20px 80px rgba(0, 0, 0, 1);
-            position: relative;
+            z-index: 10;
         }
 
         h1 { 
-            font-size: 3.5rem; 
-            letter-spacing: 12px; 
-            margin: 0; 
-            background: linear-gradient(to bottom, #fff, #00d4ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .lore-text {
-            color: #555;
-            font-size: 0.8rem;
+            font-size: 4rem; 
+            letter-spacing: 15px; 
+            text-shadow: 0 0 20px #00d4ff;
             margin-bottom: 40px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
         }
 
-        /* The Big "Enter" Button */
-        .enter-btn {
+        .btn-main {
             background: #00d4ff;
             color: #000;
-            padding: 18px 45px;
-            border-radius: 15px;
-            font-weight: 900;
+            padding: 15px 40px;
+            border-radius: 50px;
             text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            transition: 0.4s ease;
+            font-weight: bold;
+            letter-spacing: 2px;
+            transition: 0.3s;
             display: inline-block;
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+            margin: 10px;
         }
 
-        .enter-btn:hover {
+        .btn-main:hover {
             background: #fff;
-            box-shadow: 0 0 40px #fff;
-            transform: translateY(-5px);
+            box-shadow: 0 0 30px #fff;
+        }
+
+        .calc-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid #fff;
+            color: #fff;
         }
     </style>
 </head>
 <body>
 
-    <nav class="sidebar">
-        <a href="games.html" class="side-btn">
-            <i class="fa-solid fa-gamepad fa-lg"></i>
-            <span>Games</span>
-        </a>
-        <a href="movies.html" class="side-btn">
-            <i class="fa-solid fa-film fa-lg"></i>
-            <span>Movies</span>
-        </a>
+    <canvas id="star-canvas"></canvas>
+
+    <nav class="side-nav">
+        <a href="games.html" class="side-btn"><i class="fa-solid fa-gamepad"></i>GAMES</a>
+        <a href="movies.html" class="side-btn"><i class="fa-solid fa-film"></i>MOVIES</a>
     </nav>
 
-    <div class="main-card">
-        <h1>LUKE AI</h1>
-        <p class="lore-text">Chicken Bake Drake • Barry • Jhoey • Santi</p>
-        <a href="luke-ai.html" class="enter-btn">Wake the Brain</a>
+    <div style="position: absolute; top: 20%; left: 70%;">
+        <div class="star-point"></div>
+        <div class="star-label">Chicken Bake's Dipper</div>
     </div>
 
+    <div style="position: absolute; top: 60%; left: 80%;">
+        <div class="star-point"></div>
+        <div class="star-label">Barry's Cluster</div>
+    </div>
+
+    <div style="position: absolute; top: 15%; left: 15%;">
+        <div class="star-point"></div>
+        <div class="star-label">The Jhoey Nebula</div>
+    </div>
+
+    <div style="position: absolute; top: 75%; left: 20%;">
+        <div class="star-point"></div>
+        <div class="star-label">Santi's North Star</div>
+    </div>
+
+    <div class="hub-container">
+        <h1>THE COSMOS</h1>
+        <a href="luke-ai.html" class="btn-main">ENTER LUKE AI</a>
+        <br>
+        <a href="calculator.html" class="btn-main calc-btn">CALCULATOR</a>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('star-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let stars = [];
+        for(let i = 0; i < 200; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 2,
+                speed: Math.random() * 0.5
+            });
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#fff';
+            stars.forEach(s => {
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+                ctx.fill();
+                s.y += s.speed;
+                if(s.y > canvas.height) s.y = 0;
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
 </body>
 </html>
