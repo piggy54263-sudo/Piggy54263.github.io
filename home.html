@@ -156,28 +156,46 @@
         const modal = document.getElementById('modalOverlay');
         const iframe = document.getElementById('contentFrame');
 
-        // --- THE TUNG SOUND EFFECT ---
+        // --- THE TUNG SOUND EFFECT (TRIPLE T EDITION) ---
         function playTung() {
-            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            // Check if AudioContext is supported
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) return;
+
+            const audioCtx = new AudioContext();
+            
+            // Fix for browser blocking sound
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
             const oscillator = audioCtx.createOscillator();
             const gainNode = audioCtx.createGain();
 
-            oscillator.type = 'sine'; // "Tung" vibe
-            oscillator.frequency.setValueAtTime(150, audioCtx.currentTime); // Low frequency
-            oscillator.frequency.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+            // "TUNG" frequency settings
+            oscillator.type = 'triangle'; 
+            oscillator.frequency.setValueAtTime(120, audioCtx.currentTime); 
+            oscillator.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.3);
 
-            gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+            // Volume settings
+            gainNode.gain.setValueAtTime(0.8, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
 
             oscillator.connect(gainNode);
             gainNode.connect(audioCtx.destination);
 
             oscillator.start();
-            oscillator.stop(audioCtx.currentTime + 0.5);
+            oscillator.stop(audioCtx.currentTime + 0.3);
         }
 
         function openModal(url) {
-            playTung(); // BOIII TUNG TUNG TUNG!
+            // Attempt to play the TUNG sound
+            try {
+                playTung();
+            } catch (e) {
+                console.log("Audio interaction required.");
+            }
+            
             iframe.src = url;
             modal.style.display = 'flex';
         }
@@ -187,9 +205,15 @@
             iframe.src = '';
         }
 
+        // Close on Escape key
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') closeModal();
         });
+
+        // "Wake up" the audio context on first click anywhere
+        document.body.addEventListener('click', () => {
+             // This just ensures the browser allows sound for the session
+        }, { once: true });
     </script>
 </body>
 </html>
