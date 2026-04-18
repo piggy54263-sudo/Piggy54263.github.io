@@ -1,202 +1,72 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deep Space Portfolio</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --glass: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --accent: #00d4ff;
-            --ai-accent: #a855f7;
-        }
+<script>
+    const modal = document.getElementById('modalOverlay');
+    const iframe = document.getElementById('contentFrame');
+    const aiInterface = document.getElementById('aiInterface');
+    const chatLog = document.getElementById('chatLog');
+    const chatInput = document.getElementById('chatInput');
 
-        body, html {
-            margin: 0; padding: 0;
-            width: 100vw; height: 100vh;
-            overflow: hidden;
-            background: #000;
-            font-family: 'Inter', sans-serif;
-            color: white;
-        }
+    function openModal(url) {
+        aiInterface.style.display = 'none';
+        iframe.style.display = 'block';
+        iframe.src = url;
+        modal.style.display = 'flex';
+    }
 
-        /* --- Background --- */
-        .stars-container {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 200%;
-            z-index: 0;
-            background: radial-gradient(circle at center, #111 0%, #000 100%);
-        }
-        .stars-container::after {
-            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 50%;
-            background-image: radial-gradient(1px 1px at 15% 15%, #fff, transparent), 
-                              radial-gradient(1.5px 1.5px at 40% 70%, #fff, transparent);
-            background-size: 400px 400px;
-            animation: starLoop 80s linear infinite;
-        }
-        @keyframes starLoop { from { transform: translateY(0); } to { transform: translateY(-100%); } }
+    function openAI() {
+        iframe.style.display = 'none';
+        aiInterface.style.display = 'flex';
+        modal.style.display = 'flex';
+    }
 
-        /* --- Main UI --- */
-        .main-wrapper {
-            position: relative; z-index: 10;
-            display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            width: 100%; height: 100%; gap: 3rem;
-        }
+    function closeModal() {
+        modal.style.display = 'none';
+        iframe.src = '';
+    }
 
-        .button-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem; width: 95%; max-width: 800px;
-        }
+    // Brainrot Response Database
+    const responses = {
+        "hello": ["YO BOIII, Luke AI is locked in!!", "TUNG TUNG TUNG SAHUR!! You up??", "TRIPLE T IN THE CHAT BOIII!"],
+        "who": ["I'm the main character BARRY DECUSE!", "Luke AI? Nah, I'm the CHICKEN BAKE DRAKE of this galaxy.", "TRIPLE T SQUAD ONLY!!"],
+        "game": ["TRIPLE T games only, no mid stuff.", "TUNG TUNG TUNG SAHUR!! Go play something!", "BOIII if you don't click that game button right now..."],
+        "movie": ["BARRY DECUSE is the director, BOIII!", "Watching a movie? CHICKEN BAKE DRAKE style!", "TUNG TUNG TUNG SAHUR!! Movie night!"],
+        "triplet": ["TRIPLE T!! TRIPLE T!! TRIPLE T!!", "You know the code BOIII!! TRIPLE T for life."],
+        "default": [
+            "TUNG TUNG TUNG SAHUR!! I don't get it BOIII!",
+            "CHICKEN BAKE DRAKE energy right there.",
+            "BARRY DECUSE doesn't understand that, TRIPLE T!",
+            "BOIII you really just said that? TUNG TUNG TUNG!",
+            "That's not very TRIPLE T of you."
+        ]
+    };
 
-        .nav-btn {
-            background: var(--glass);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            padding: 2.5rem 1rem;
-            color: white; border-radius: 12px;
-            display: flex; flex-direction: column; align-items: center; gap: 1rem;
-            cursor: pointer; transition: 0.4s;
-        }
-        .nav-btn:hover { transform: scale(1.08); border-color: var(--accent); }
-        .ai-btn:hover { border-color: var(--ai-accent); box-shadow: 0 0 20px rgba(168, 85, 247, 0.3); }
+    function sendMessage() {
+        const text = chatInput.value.toLowerCase();
+        if (!text) return;
 
-        /* --- Luke AI Chat Interface --- */
-        #aiInterface {
-            display: none;
-            flex-direction: column;
-            height: 100%;
-            background: #0a0a0a;
-            padding: 20px;
-            font-family: 'Courier New', monospace;
-        }
+        // Add user message
+        chatLog.innerHTML += `<div class="user-msg">YOU: ${text}</div>`;
+        chatInput.value = "";
 
-        #chatLog {
-            flex-grow: 1;
-            overflow-y: auto;
-            margin-bottom: 20px;
-            padding: 10px;
-            border-bottom: 1px solid #222;
-        }
+        // Luke AI Brainrot Logic
+        setTimeout(() => {
+            let r = responses.default[Math.floor(Math.random() * responses.default.length)];
+            
+            // Check for keywords
+            if (text.includes("hello") || text.includes("hi")) r = responses.hello[Math.floor(Math.random() * responses.hello.length)];
+            else if (text.includes("who")) r = responses.who[Math.floor(Math.random() * responses.who.length)];
+            else if (text.includes("game")) r = responses.game[Math.floor(Math.random() * responses.game.length)];
+            else if (text.includes("movie")) r = responses.movie[Math.floor(Math.random() * responses.movie.length)];
+            else if (text.includes("triple t") || text.includes("triplet")) r = responses.triplet[Math.floor(Math.random() * responses.triplet.length)];
 
-        .ai-msg { color: #a855f7; margin-bottom: 15px; line-height: 1.4; }
-        .user-msg { color: #00d4ff; margin-bottom: 15px; text-align: right; }
+            chatLog.innerHTML += `<div class="ai-msg">LUKE AI: ${r}</div>`;
+            
+            // Auto-scroll to bottom
+            chatLog.scrollTop = chatLog.scrollHeight;
+        }, 500);
+    }
 
-        .chat-input-area { display: flex; gap: 10px; padding-top: 10px; }
-        #chatInput {
-            flex-grow: 1;
-            background: #111;
-            border: 1px solid #333;
-            color: #00ff00;
-            padding: 12px;
-            outline: none;
-        }
-
-        /* --- Global Modal --- */
-        #modalOverlay {
-            display: none; position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 100; flex-direction: column;
-        }
-        .modal-header { padding: 1rem; display: flex; justify-content: flex-end; }
-        .close-btn { background: none; border: 1px solid white; color: white; padding: 0.5rem 1rem; cursor: pointer; }
-        iframe { flex-grow: 1; border: none; }
-    </style>
-</head>
-<body>
-
-    <div class="stars-container"></div>
-
-    <main class="main-wrapper">
-        <h1>CONSTELLATION</h1>
-        <section class="button-grid">
-            <button class="nav-btn" onclick="openModal('https://example.com')">
-                <i class="fa-solid fa-gamepad"></i><span>Games</span>
-            </button>
-            <button class="nav-btn ai-btn" onclick="openAI()">
-                <i class="fa-solid fa-robot"></i><span>Luke AI</span>
-            </button>
-            <button class="nav-btn" onclick="openModal('https://example.com')">
-                <i class="fa-solid fa-film"></i><span>Movies</span>
-            </button>
-        </section>
-    </main>
-
-    <div id="modalOverlay">
-        <div class="modal-header">
-            <button class="close-btn" onclick="closeModal()">CLOSE [X]</button>
-        </div>
-        <iframe id="contentFrame" src=""></iframe>
-        <div id="aiInterface">
-            <div id="chatLog">
-                <div class="ai-msg">LUKE AI: Offline Logic Core Active. Systems nominal. How can I help, Captain?</div>
-            </div>
-            <div class="chat-input-area">
-                <input type="text" id="chatInput" placeholder="Enter command...">
-                <button onclick="sendMessage()" style="background: #a855f7; border:none; color:white; padding: 10px 20px; cursor: pointer;">SEND</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const modal = document.getElementById('modalOverlay');
-        const iframe = document.getElementById('contentFrame');
-        const aiInterface = document.getElementById('aiInterface');
-        const chatLog = document.getElementById('chatLog');
-        const chatInput = document.getElementById('chatInput');
-
-        function openModal(url) {
-            aiInterface.style.display = 'none';
-            iframe.style.display = 'block';
-            iframe.src = url;
-            modal.style.display = 'flex';
-        }
-
-        function openAI() {
-            iframe.style.display = 'none';
-            aiInterface.style.display = 'flex';
-            modal.style.display = 'flex';
-        }
-
-        function closeModal() {
-            modal.style.display = 'none';
-            iframe.src = '';
-        }
-
-        const responses = {
-            "hello": ["Greetings, traveler.", "Systems online. Hello!", "Ready for the next jump."],
-            "who": ["I am LUKE: Logic Unit for Kinetic Exploration.", "Your personal assistant among the stars."],
-            "game": ["The Game module is optimized. Shall we play?", "I recommend the high-score challenge."],
-            "movie": ["The cinema archives are vast. Pick a transmission.", "Movies help pass the light years."],
-            "joke": ["Why don't aliens visit our galaxy? Only 1 star rating.", "What's a light year? The same as a regular year, but with fewer calories."],
-            "default": ["Analyzing that request...", "Interpreting nebula data... try asking something else.", "My sensors are slightly jammed. Say again?", "That is outside my current mission parameters."]
-        };
-
-        function sendMessage() {
-            const text = chatInput.value.toLowerCase();
-            if (!text) return;
-
-            chatLog.innerHTML += `<div class="user-msg">YOU: ${text}</div>`;
-            chatInput.value = "";
-
-            setTimeout(() => {
-                let r = responses.default[Math.floor(Math.random() * responses.default.length)];
-                
-                for (let key in responses) {
-                    if (text.includes(key) && key !== "default") {
-                        r = responses[key][Math.floor(Math.random() * responses[key].length)];
-                    }
-                }
-
-                chatLog.innerHTML += `<div class="ai-msg">LUKE AI: ${r}</div>`;
-                chatLog.scrollTop = chatLog.scrollHeight;
-            }, 600);
-        }
-
-        chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
-    </script>
-</body>
-</html>
+    // Listen for Enter key
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendMessage();
+    });
+</script>
