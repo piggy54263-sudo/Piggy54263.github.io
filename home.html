@@ -11,6 +11,7 @@
             --glass-border: rgba(255, 255, 255, 0.1);
             --accent: #00d4ff;
             --ai-accent: #a855f7;
+            --calc-accent: #4ade80;
         }
 
         body, html {
@@ -23,12 +24,9 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* --- Background --- */
         .stars-container {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 200%;
-            z-index: 0;
-            background: radial-gradient(circle at center, #111 0%, #000 100%);
+            position: fixed; top: 0; left: 0; width: 100%; height: 200%;
+            z-index: 0; background: radial-gradient(circle at center, #111 0%, #000 100%);
         }
         .stars-container::after {
             content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 50%;
@@ -39,7 +37,6 @@
         }
         @keyframes starLoop { from { transform: translateY(0); } to { transform: translateY(-50%); } }
 
-        /* --- Content Layout --- */
         .main-wrapper {
             position: relative; z-index: 10;
             display: flex; flex-direction: column;
@@ -50,26 +47,22 @@
 
         h1 { font-size: 1.5rem; letter-spacing: 0.5rem; text-transform: uppercase; text-align: center; }
 
-        /* --- The Flexible Grid --- */
         .button-grid {
             display: grid; 
             gap: 1.5rem; 
             width: 100%; 
-            max-width: 800px;
-            transition: all 0.5s ease;
+            max-width: 900px;
         }
 
-        /* PC Mode (Default) */
-        .is-pc .button-grid { grid-template-columns: repeat(3, 1fr); }
-        
-        /* Mobile Mode */
-        .is-mobile .button-grid { grid-template-columns: 1fr; }
+        /* Responsive Grid Logic */
+        .is-pc .button-grid { grid-template-columns: repeat(4, 1fr); }
+        .is-mobile .button-grid { grid-template-columns: repeat(2, 1fr); }
 
         .nav-btn {
             background: var(--glass);
             backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
-            padding: 2rem 1rem;
+            padding: 2rem 0.5rem;
             color: white;
             cursor: pointer;
             border-radius: 12px;
@@ -80,23 +73,18 @@
             transition: 0.3s;
         }
 
-        .nav-btn i { font-size: 2.5rem; }
-        .nav-btn span { font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; }
+        .nav-btn i { font-size: 2rem; }
+        .nav-btn span { font-size: 0.65rem; letter-spacing: 1px; text-transform: uppercase; }
 
-        /* --- PC Hover Effects --- */
-        .is-pc .nav-btn:hover {
-            transform: scale(1.1);
-            border-color: var(--accent);
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
-        }
-
-        /* --- Modal --- */
+        .is-pc .nav-btn:hover { transform: scale(1.05); border-color: var(--accent); }
+        
+        /* Modal */
         #modalOverlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 100; flex-direction: column;
         }
         .modal-header { padding: 10px; display: flex; justify-content: flex-end; background: #111; }
-        .close-btn { background: var(--ai-accent); border: none; color: white; padding: 10px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        .close-btn { background: #333; border: none; color: white; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
         iframe { flex-grow: 1; border: none; }
     </style>
 </head>
@@ -105,8 +93,7 @@
     <div class="stars-container"></div>
 
     <main class="main-wrapper">
-        <h1 id="mainTitle">CONSTELLATION</h1>
-        <div id="deviceTag" style="font-size: 0.6rem; color: #555;">DETECTING SYSTEM...</div>
+        <h1>CONSTELLATION</h1>
 
         <section class="button-grid">
             <button class="nav-btn" onclick="openModal('games.html')">
@@ -118,6 +105,9 @@
             <button class="nav-btn" onclick="openModal('movies.html')">
                 <i class="fa-solid fa-film"></i><span>Movies</span>
             </button>
+            <button class="nav-btn" style="border-color: var(--calc-accent);" onclick="openModal('calculator.html')">
+                <i class="fa-solid fa-calculator" style="color: var(--calc-accent);"></i><span>Calc</span>
+            </button>
         </section>
     </main>
 
@@ -127,28 +117,14 @@
     </div>
 
     <script>
-        // --- DEVICE DETECTION LOGIC ---
-        function detectDevice() {
-            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-            const body = document.body;
-            const deviceTag = document.getElementById('deviceTag');
-
-            // Regex check for mobile devices
-            if (/android|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent)) {
-                body.classList.add('is-mobile');
-                deviceTag.innerText = "MOBILE CORE ACTIVE";
-                console.log("BOIII, you on a phone!");
-            } else {
-                body.classList.add('is-pc');
-                deviceTag.innerText = "DESKTOP CORE ACTIVE";
-                console.log("TRIPLE T PC DETECTED!");
-            }
+        // Device Detection
+        const body = document.body;
+        if (/android|iphone|ipad|ipod/i.test(navigator.userAgent)) {
+            body.classList.add('is-mobile');
+        } else {
+            body.classList.add('is-pc');
         }
 
-        // Run detection on load
-        detectDevice();
-
-        // --- REST OF YOUR LOGIC ---
         const modal = document.getElementById('modalOverlay');
         const iframe = document.getElementById('contentFrame');
         let audioCtx;
@@ -160,27 +136,21 @@
             const gain = audioCtx.createGain();
             osc.type = 'triangle';
             osc.frequency.setValueAtTime(120, audioCtx.currentTime);
-            oscillatorRamp = audioCtx.currentTime + 0.3;
-            osc.frequency.exponentialRampToValueAtTime(40, oscillatorRamp);
-            gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, oscillatorRamp);
             osc.connect(gain);
             gain.connect(audioCtx.destination);
             osc.start();
-            osc.stop(oscillatorRamp);
+            osc.stop(audioCtx.currentTime + 0.2);
         }
 
         function openModal(url) {
             playTung();
             iframe.src = url;
             modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
         }
 
         function closeModal() {
             modal.style.display = 'none';
             iframe.src = '';
-            document.body.style.overflow = 'auto';
         }
     </script>
 </body>
