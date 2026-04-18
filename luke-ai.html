@@ -1,59 +1,69 @@
-function talk() {
-    const input = document.getElementById('chatInput');
-    const log = document.getElementById('chatLog');
-    const text = input.value.toLowerCase();
-    if (!text) return;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luke AI Core</title>
+    <style>
+        body { background: #000; color: #a855f7; font-family: 'Courier New', monospace; margin: 0; display: flex; flex-direction: column; height: 100vh; }
+        #chatLog { flex-grow: 1; padding: 20px; overflow-y: auto; border-bottom: 1px solid #333; }
+        .user-msg { color: #00d4ff; margin: 10px 0; text-align: right; }
+        .ai-msg { color: #a855f7; margin: 10px 0; font-weight: bold; }
+        .input-area { display: flex; padding: 15px; background: #0a0a0a; }
+        input { flex-grow: 1; background: #111; border: 1px solid #a855f7; color: #fff; padding: 12px; outline: none; border-radius: 4px; }
+        button { background: #a855f7; border: none; color: black; padding: 0 20px; margin-left: 10px; cursor: pointer; font-weight: bold; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div id="chatLog">
+        <div class="ai-msg">LUKE AI: SYSTEMS ONLINE... BOIII, WE ARE LOCKED IN!</div>
+    </div>
+    <div class="input-area">
+        <input type="text" id="chatInput" placeholder="Talk to Luke...">
+        <button id="sendBtn">SEND</button>
+    </div>
 
-    // Show user message
-    log.innerHTML += `<div class="user-msg">YOU: ${text}</div>`;
-    input.value = "";
+    <script>
+        const chatInput = document.getElementById('chatInput');
+        const chatLog = document.getElementById('chatLog');
+        const sendBtn = document.getElementById('sendBtn');
 
-    setTimeout(() => {
-        let reply = "";
+        function talk() {
+            const text = chatInput.value.trim().toLowerCase();
+            if (!text) return;
 
-        // 1. MATH CHECK
-        const math = text.match(/(\d+)\s*([\+\-\*\/])\s*(\d+)/);
-        if (math) {
-            const result = eval(math[0]);
-            reply = `BOIII, the math is light work! ${math[0]} is ${result}!! TRIPLE T CALCULATIONS!`;
-        } 
-        // 2. KEYWORD LOGIC
-        else if (text.includes("help") || text.includes("how")) {
-            reply = "Listen BOIII, click Games for the heat, Movies for the cinema, and talk to me for the TRIPLE T energy!";
-        } 
-        else if (text.includes("game") || text.includes("play")) {
-            reply = "TRIPLE T games are the only way to live, BOIII! TUNG TUNG TUNG!";
-        } 
-        else if (text.includes("bad") || text.includes("mid") || text.includes("l")) {
-            reply = "L? BOIII, BARRY DECUSE doesn't take L's! We only take TRIPLE T W's!";
-        } 
-        else if (text.includes("food") || text.includes("eat")) {
-            reply = "You already know... CHICKEN BAKE DRAKE is on the menu! TUNG TUNG TUNG!";
-        } 
-        else if (text.includes("funny") || text.includes("joke")) {
-            reply = "Why did the chicken bake cross the road? To get to the TRIPLE T side! BOIII!";
-        } 
-        else if (text.includes("hello") || text.includes("yo") || text.includes("hi")) {
-            reply = "YO YO YO BOIII! TUNG TUNG TUNG SAHUR! We locked in!";
-        } 
-        else if (text.includes("drake")) {
-            reply = "CHICKEN BAKE DRAKE is the vibe, BOIII!";
-        } 
-        else if (text.includes("barry") || text.includes("decuse")) {
-            reply = "BARRY DECUSE is a absolute legend! Triple T Squad for life!!";
-        } 
-        else if (text.includes("triple t") || text.includes("triplet")) {
-            reply = "TRIPLE T!! TRIPLE T!! TUNG TUNG TUNG SAHUR!!";
-        } 
-        // 3. FALLBACK
-        else {
-            reply = "BOIII, my logic core is vibrating! Say that again but make it TRIPLE T energy!";
+            // 1. Show User Message
+            chatLog.innerHTML += `<div class="user-msg">YOU: ${text}</div>`;
+            chatInput.value = "";
+
+            setTimeout(() => {
+                let reply = "BOIII, my logic core is vibrating! Try again with TRIPLE T energy!";
+
+                // 2. The Logic Tree
+                if (text.includes("hello") || text.includes("yo")) {
+                    reply = "YO YO YO BOIII! TUNG TUNG TUNG SAHUR!";
+                } else if (text.includes("+") || text.includes("-") || text.includes("*")) {
+                    try {
+                        const result = eval(text.replace(/[^-()\d/*+.]/g, ''));
+                        reply = `BOIII, easy math! That's ${result}!! TRIPLE T BRAIN!`;
+                    } catch(e) { reply = "Math is bugged, BOIII!"; }
+                } else if (text.includes("drake")) {
+                    reply = "CHICKEN BAKE DRAKE is the vibe!";
+                } else if (text.includes("barry")) {
+                    reply = "BARRY DECUSE is a legend! Triple T Squad!!";
+                } else if (text.includes("triple t")) {
+                    reply = "TRIPLE T!! TUNG TUNG TUNG!!";
+                }
+
+                // 3. Show AI Message
+                chatLog.innerHTML += `<div class="ai-msg">LUKE AI: ${reply}</div>`;
+                chatLog.scrollTop = chatLog.scrollHeight;
+            }, 400);
         }
 
-        // Add Luke's message to the log
-        log.innerHTML += `<div class="ai-msg">LUKE AI: ${reply}</div>`;
-        
-        // Auto-scroll to bottom
-        log.scrollTop = log.scrollHeight;
-    }, 500);
-}
+        // Click or Enter
+        sendBtn.addEventListener('click', talk);
+        chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') talk(); });
+    </script>
+</body>
+</html>
