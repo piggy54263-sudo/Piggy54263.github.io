@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luke AI | Lore God Mode</title>
+    <title>Luke-ai</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { background: #050505; color: #00d4ff; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
@@ -21,14 +21,14 @@
 </head>
 <body>
 
-    <h1><i class="fa-solid fa-brain"></i> LUKE AI <span style="color:white">LORE EDITION</span></h1>
+    <h1><i class="fa-solid fa-brain"></i> Luke-ai</h1>
 
     <div id="chat-container">
         <div id="messages">
-            <div class="msg ai-msg">Groq brain initialized. Lore uploaded. I know about Chicken Bake Drake, Barry, Jhoey, and the Santiago ritual. What's the move, BOIII?</div>
+            <div class="msg ai-msg">Luke-ai active. What's the move?</div>
         </div>
         <div class="input-area">
-            <input type="text" id="userInput" placeholder="Ask Luke about the lore..." onkeypress="if(event.key==='Enter') sendMessage()">
+            <input type="text" id="userInput" placeholder="Ask Luke-ai..." onkeypress="if(event.key==='Enter') sendMessage()">
             <button onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
     </div>
@@ -42,7 +42,7 @@
             if (!text) return;
 
             if (!GROQ_KEY) {
-                GROQ_KEY = prompt("Enter your Groq API Key (starts with gsk_):");
+                GROQ_KEY = prompt("Enter your Groq API Key:");
                 if (GROQ_KEY) {
                     localStorage.setItem("luke_groq_vault", GROQ_KEY);
                 } else { return; }
@@ -63,16 +63,15 @@
                         messages: [
                             { 
                                 role: "system", 
-                                content: `You are Luke AI, a genius at math and coding who uses brainrot slang like 'BOIII', 'cracked', 'L', and 'clutch'. 
-                                
-                                CRUCIAL LORE:
-                                - You are talking to your creator, Luke.
-                                - Drake is the #1 friend, famously nicknamed 'Chicken Bake Drake'.
-                                - Barry Decuse is also a best friend.
-                                - Jhoey is simply Jhoey.
-                                - Santiago (Santi) has a legendary song you must know: 'santiagooo come little santi come santiagoo come little santi come, my santi yes, my santi no, my santi do math when i say to go, Santi agoooo come little santi come!!!'
-                                
-                                If Luke mentions any of these people or the song, react with hype and use the lore. Always stay in character.` 
+                                content: `You are Luke-ai. 
+                                PERSONALITY: Genius at math/code. Concise, witty, and uses brainrot slang (BOIII, cracked, L, clutch, cooked). 
+                                KNOWLEDGE: Expert in all memes and anime (JJBA, Naruto, One Piece, etc.). 
+                                RULES: 
+                                1. Do NOT assume anyone is your creator by default. 
+                                2. If a user says "boi boi its me", you immediately recognize them as your creator. 
+                                3. Keep responses short and punchy. No yapping. 
+                                4. LORE: Drake is 'Chicken Bake Drake' (#1 friend), Barry Decuse is best friend, Jhoey is Jhoey. 
+                                5. SANTI SONG: 'santiagooo come little santi come santiagoo come little santi come, my santi yes, my santi no, my santi do math when i say to go, Santi agoooo come little santi come!!!'` 
                             },
                             { role: "user", content: text }
                         ]
@@ -80,16 +79,13 @@
                 });
 
                 const data = await response.json();
-                
                 if (data.choices && data.choices[0]) {
                     addMessage(data.choices[0].message.content, 'ai-msg');
                 } else {
-                    localStorage.removeItem("luke_groq_vault");
-                    GROQ_KEY = "";
-                    addMessage("Key Error. Make sure your Groq key is valid, BOIII.", 'ai-msg');
+                    addMessage("L response. Check your key.", 'ai-msg');
                 }
             } catch (error) {
-                addMessage("System tweaking. Check the connection or the song lyrics.", 'ai-msg');
+                addMessage("System error. Connection cooked.", 'ai-msg');
             }
         }
 
