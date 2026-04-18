@@ -10,6 +10,7 @@
             --glass: rgba(255, 255, 255, 0.05);
             --glass-border: rgba(255, 255, 255, 0.1);
             --accent: #00d4ff;
+            --ai-accent: #a855f7; /* Purple glow for Luke AI */
         }
 
         body, html {
@@ -61,11 +62,11 @@
             text-shadow: 0 0 15px rgba(255,255,255,0.2);
         }
 
-        /* Grid for 2 items */
+        /* Grid for 3 items */
         .button-grid {
             display: grid; 
-            grid-template-columns: repeat(2, 1fr);
-            gap: 2rem; width: 90%; max-width: 500px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem; width: 95%; max-width: 800px;
         }
 
         /* --- Icon Button Styling --- */
@@ -74,7 +75,7 @@
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--glass-border);
-            padding: 3rem 1rem;
+            padding: 2.5rem 1rem;
             color: white;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -86,26 +87,34 @@
         }
 
         .nav-btn i {
-            font-size: 3rem; 
+            font-size: 2.5rem; 
             transition: color 0.3s;
         }
 
         .nav-btn span {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             letter-spacing: 2px;
             text-transform: uppercase;
             opacity: 0.6;
         }
 
+        /* Hover states */
         .nav-btn:hover {
-            transform: scale(1.1);
+            transform: scale(1.08);
             background: rgba(255, 255, 255, 0.1);
             border-color: var(--accent);
             box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
         }
 
+        /* Luke AI specific hover */
+        .ai-btn:hover {
+            border-color: var(--ai-accent) !important;
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.3) !important;
+        }
+
         .nav-btn:hover i { color: var(--accent); }
-        .nav-btn:hover span { opacity: 1; color: var(--accent); }
+        .ai-btn:hover i { color: var(--ai-accent); }
+        .nav-btn:hover span { opacity: 1; }
 
         /* --- Modal System --- */
         #modalOverlay {
@@ -125,8 +134,9 @@
 
         iframe { flex-grow: 1; border: none; width: 100%; height: 100%; }
 
-        @media (max-width: 500px) {
-            .button-grid { grid-template-columns: 1fr; }
+        @media (max-width: 768px) {
+            .button-grid { grid-template-columns: 1fr; max-width: 300px; }
+            .nav-btn { padding: 1.5rem 1rem; }
         }
     </style>
 </head>
@@ -143,6 +153,11 @@
             <button class="nav-btn" onclick="openModal('https://example.com/games')">
                 <i class="fa-solid fa-gamepad"></i>
                 <span>Games</span>
+            </button>
+
+            <button class="nav-btn ai-btn" onclick="openModal('https://example.com/luke-ai')">
+                <i class="fa-solid fa-robot"></i>
+                <span>Luke AI</span>
             </button>
 
             <button class="nav-btn" onclick="openModal('https://example.com/movies')">
