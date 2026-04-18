@@ -1,72 +1,195 @@
-<script>
-    const modal = document.getElementById('modalOverlay');
-    const iframe = document.getElementById('contentFrame');
-    const aiInterface = document.getElementById('aiInterface');
-    const chatLog = document.getElementById('chatLog');
-    const chatInput = document.getElementById('chatInput');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Space Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent: #00d4ff;
+            --ai-accent: #a855f7;
+        }
 
-    function openModal(url) {
-        aiInterface.style.display = 'none';
-        iframe.style.display = 'block';
-        iframe.src = url;
-        modal.style.display = 'flex';
-    }
+        body, html {
+            margin: 0; padding: 0;
+            width: 100vw; height: 100vh;
+            overflow: hidden;
+            background: #000;
+            font-family: 'Inter', sans-serif;
+            color: white;
+        }
 
-    function openAI() {
-        iframe.style.display = 'none';
-        aiInterface.style.display = 'flex';
-        modal.style.display = 'flex';
-    }
+        /* --- Animated Background --- */
+        .stars-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 200%;
+            z-index: 0;
+            background: radial-gradient(circle at center, #111 0%, #000 100%);
+        }
 
-    function closeModal() {
-        modal.style.display = 'none';
-        iframe.src = '';
-    }
+        .stars-container::after, .stars-container::before {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 50%;
+            background-image: 
+                radial-gradient(1px 1px at 15% 15%, #fff, transparent),
+                radial-gradient(1.5px 1.5px at 40% 70%, #fff, transparent),
+                radial-gradient(2px 2px at 80% 30%, #fff, transparent);
+            background-size: 400px 400px;
+            animation: starLoop 80s linear infinite;
+            opacity: 0.4;
+        }
 
-    // Brainrot Response Database
-    const responses = {
-        "hello": ["YO BOIII, Luke AI is locked in!!", "TUNG TUNG TUNG SAHUR!! You up??", "TRIPLE T IN THE CHAT BOIII!"],
-        "who": ["I'm the main character BARRY DECUSE!", "Luke AI? Nah, I'm the CHICKEN BAKE DRAKE of this galaxy.", "TRIPLE T SQUAD ONLY!!"],
-        "game": ["TRIPLE T games only, no mid stuff.", "TUNG TUNG TUNG SAHUR!! Go play something!", "BOIII if you don't click that game button right now..."],
-        "movie": ["BARRY DECUSE is the director, BOIII!", "Watching a movie? CHICKEN BAKE DRAKE style!", "TUNG TUNG TUNG SAHUR!! Movie night!"],
-        "triplet": ["TRIPLE T!! TRIPLE T!! TRIPLE T!!", "You know the code BOIII!! TRIPLE T for life."],
-        "default": [
-            "TUNG TUNG TUNG SAHUR!! I don't get it BOIII!",
-            "CHICKEN BAKE DRAKE energy right there.",
-            "BARRY DECUSE doesn't understand that, TRIPLE T!",
-            "BOIII you really just said that? TUNG TUNG TUNG!",
-            "That's not very TRIPLE T of you."
-        ]
-    };
+        .stars-container::before { top: 50%; }
 
-    function sendMessage() {
-        const text = chatInput.value.toLowerCase();
-        if (!text) return;
+        @keyframes starLoop {
+            from { transform: translateY(0); }
+            to { transform: translateY(-100%); }
+        }
 
-        // Add user message
-        chatLog.innerHTML += `<div class="user-msg">YOU: ${text}</div>`;
-        chatInput.value = "";
+        /* --- Layout --- */
+        .main-wrapper {
+            position: relative; z-index: 10;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            width: 100%; height: 100%; gap: 3rem;
+        }
 
-        // Luke AI Brainrot Logic
-        setTimeout(() => {
-            let r = responses.default[Math.floor(Math.random() * responses.default.length)];
-            
-            // Check for keywords
-            if (text.includes("hello") || text.includes("hi")) r = responses.hello[Math.floor(Math.random() * responses.hello.length)];
-            else if (text.includes("who")) r = responses.who[Math.floor(Math.random() * responses.who.length)];
-            else if (text.includes("game")) r = responses.game[Math.floor(Math.random() * responses.game.length)];
-            else if (text.includes("movie")) r = responses.movie[Math.floor(Math.random() * responses.movie.length)];
-            else if (text.includes("triple t") || text.includes("triplet")) r = responses.triplet[Math.floor(Math.random() * responses.triplet.length)];
+        h1 {
+            font-size: 2rem; font-weight: 200; letter-spacing: 0.8rem;
+            text-transform: uppercase; margin: 0;
+            text-shadow: 0 0 15px rgba(255,255,255,0.2);
+        }
 
-            chatLog.innerHTML += `<div class="ai-msg">LUKE AI: ${r}</div>`;
-            
-            // Auto-scroll to bottom
-            chatLog.scrollTop = chatLog.scrollHeight;
-        }, 500);
-    }
+        .button-grid {
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem; width: 95%; max-width: 800px;
+        }
 
-    // Listen for Enter key
-    chatInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') sendMessage();
-    });
-</script>
+        /* --- Icon Button Styling --- */
+        .nav-btn {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            padding: 2.5rem 1rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-btn i { font-size: 2.5rem; transition: color 0.3s; }
+        .nav-btn span { font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0.6; }
+
+        .nav-btn:hover {
+            transform: scale(1.08);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+        }
+
+        /* Luke AI Special Style */
+        .ai-btn:hover {
+            border-color: var(--ai-accent) !important;
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.3) !important;
+        }
+        .ai-btn:hover i { color: var(--ai-accent); }
+
+        /* --- Modal System --- */
+        #modalOverlay {
+            display: none; position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 100; flex-direction: column;
+        }
+
+        .modal-header { padding: 1rem; display: flex; justify-content: flex-end; }
+        .close-btn { background: none; border: 1px solid white; color: white; padding: 0.6rem 1.2rem; cursor: pointer; }
+        iframe { flex-grow: 1; border: none; width: 100%; height: 100%; }
+
+        @media (max-width: 768px) {
+            .button-grid { grid-template-columns: 1fr; max-width: 300px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stars-container"></div>
+
+    <main class="main-wrapper">
+        <header>
+            <h1>CONSTELLATION</h1>
+        </header>
+
+        <section class="button-grid">
+            <button class="nav-btn" onclick="openModal('games.html')">
+                <i class="fa-solid fa-gamepad"></i>
+                <span>Games</span>
+            </button>
+
+            <button class="nav-btn ai-btn" onclick="openModal('luke-ai.html')">
+                <i class="fa-solid fa-robot"></i>
+                <span>Luke AI</span>
+            </button>
+
+            <button class="nav-btn" onclick="openModal('movies.html')">
+                <i class="fa-solid fa-film"></i>
+                <span>Movies</span>
+            </button>
+        </section>
+    </main>
+
+    <div id="modalOverlay">
+        <div class="modal-header">
+            <button class="close-btn" onclick="closeModal()">CLOSE [X]</button>
+        </div>
+        <iframe id="contentFrame" src=""></iframe>
+    </div>
+
+    <script>
+        const modal = document.getElementById('modalOverlay');
+        const iframe = document.getElementById('contentFrame');
+
+        // --- THE TUNG SOUND EFFECT ---
+        function playTung() {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+
+            oscillator.type = 'sine'; // "Tung" vibe
+            oscillator.frequency.setValueAtTime(150, audioCtx.currentTime); // Low frequency
+            oscillator.frequency.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+
+            gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.5);
+        }
+
+        function openModal(url) {
+            playTung(); // BOIII TUNG TUNG TUNG!
+            iframe.src = url;
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+            iframe.src = '';
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
