@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Da Website - Cinema</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: #000; color: white; font-family: 'Inter', sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .video-wrapper { position: relative; width: 100%; max-width: 850px; background: #111; border-radius: 12px; overflow: hidden; border: 1px solid #333; margin-bottom: 30px; }
+        video { width: 100%; display: block; }
+        .custom-controls { position: absolute; bottom: 0; left: 0; width: 100%; background: linear-gradient(transparent, rgba(0,0,0,0.9)); display: flex; align-items: center; padding: 15px; gap: 15px; box-sizing: border-box; opacity: 0; transition: 0.3s; }
+        .video-wrapper:hover .custom-controls { opacity: 1; }
+        .btn { background: none; border: none; color: white; cursor: pointer; font-size: 1.2rem; }
+        .btn:hover { color: #00d4ff; }
+        input[type="range"] { cursor: pointer; accent-color: #00d4ff; width: 80px; }
+        .movie-menu { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; width: 100%; max-width: 900px; }
+        .movie-card { background: #111; border: 1px solid #333; border-radius: 12px; overflow: hidden; cursor: pointer; transition: 0.3s; text-align: center; }
+        .movie-card:hover { border-color: #00d4ff; transform: scale(1.03); }
+        .thumb { height: 120px; background: linear-gradient(45deg, #00d4ff, #a855f7); display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
+        .popup { background: #111; border: 1px solid #00d4ff; padding: 30px; border-radius: 20px; width: 100%; max-width: 500px; position: relative; }
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; color: #666; }
+        .popup h3 { margin-top: 0; color: #00d4ff; }
+        .popup-actions { display: flex; gap: 15px; margin-top: 20px; }
+        .p-btn { flex: 1; padding: 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .watch-now { background: #00d4ff; color: #000; }
+        .series-info { background: #222; color: #fff; border: 1px solid #444; }
+        .episode-drawer { display: none; margin-top: 20px; border-top: 1px solid #333; padding-top: 20px; max-height: 200px; overflow-y: auto; }
+        .ep-item { padding: 10px; background: #1a1a1a; margin-bottom: 8px; border-radius: 6px; cursor: pointer; }
+        .ep-item:hover { background: #00d4ff; color: #000; }
+    </style>
+</head>
+<body>
+    <h2>TRIPLE T CINEMA</h2>
+    <div class="video-wrapper">
+        <video id="mainVideo" poster="https://via.placeholder.com/800x450/000/00d4ff?text=Select+a+Movie">
+            <source id="videoSource" src="">
+        </video>
+        <div class="custom-controls">
+            <button class="btn" onclick="togglePlay()"><i id="playIcon" class="fa-solid fa-play"></i></button>
+            <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="1">
+            <div style="flex-grow:1; font-family:monospace;" id="timeShow">0:00 / 0:00</div>
+            <button class="btn" onclick="toggleFull()"><i class="fa-solid fa-expand"></i></button>
+        </div>
+    </div>
+    <div class="movie-menu">
+        <div class="movie-card" onclick="openPopup('JJK', 'Yuji Itadori is a boy with tremendous physical strength, though he lives a completely ordinary high school life...')">
+            <div class="thumb"><i class="fa-solid fa-fire"></i></div>
+            <div style="padding:10px;">JJK</div>
+        </div>
+    </div>
+    <div class="overlay" id="overlay">
+        <div class="popup">
+            <span class="close-btn" onclick="closePopup()">&times;</span>
+            <h3 id="popTitle">Title</h3>
+            <p id="popDesc">Description...</p>
+            <div class="popup-actions">
+                <button class="p-btn watch-now" onclick="quickWatch()">Watch</button>
+                <button class="p-btn series-info" onclick="toggleEpisodes()">Series & Info</button>
+            </div>
+            <div class="episode-drawer" id="epDrawer">
+                <div class="ep-item" onclick="playEp('jjk_s1e1.mp4', 'S1:E1')">S1:E1 - Departure</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const video = document.getElementById('mainVideo');
+        const source = document.getElementById('videoSource');
+        const overlay = document.getElementById('overlay');
+        const drawer = document.getElementById('epDrawer');
+        const playIcon = document.getElementById('playIcon');
+
+        function openPopup(title, desc) {
+            document.getElementById('popTitle').innerText = title;
+            document.getElementById('popDesc').innerText = desc;
+            overlay.style.display = 'flex';
+        }
+        function closePopup() { overlay.style.display = 'none'; drawer.style.display = 'none'; }
+        function toggleEpisodes() { drawer.style.display = drawer.style.display === 'block' ? 'none' : 'block'; }
+        function playEp(file, title) {
+            source.src = file;
+            video.load(); video.play();
+            playIcon.className = "fa-solid fa-pause";
+            closePopup();
+        }
+        function quickWatch() { playEp('jjk_s1e1.mp4', 'S1:E1'); }
+        function togglePlay() {
+            if (video.paused) { video.play(); playIcon.className = "fa-solid fa-pause"; }
+            else { video.pause(); playIcon.className = "fa-solid fa-play"; }
+        }
+        function toggleFull() { if (video.requestFullscreen) video.requestFullscreen(); else if (video.webkitRequestFullscreen) video.webkitRequestFullscreen(); }
+        document.getElementById('volumeSlider').addEventListener('input', (e) => { video.volume = e.target.value; });
+        video.addEventListener('timeupdate', () => {
+            let curr = Math.floor(video.currentTime);
+            let dur = Math.floor(video.duration) || 0;
+            document.getElementById('timeShow').innerText = `${Math.floor(curr/60)}:${(curr%60).toString().padStart(2,'0')} / ${Math.floor(dur/60)}:${(dur%60).toString().padStart(2,'0')}`;
+        });
+    </script>
+</body>
+</html>
