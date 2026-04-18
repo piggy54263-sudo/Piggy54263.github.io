@@ -3,45 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Triple T Games</title>
+    <title>Da Website - Games</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            background: #000; color: white;
-            font-family: 'Inter', sans-serif; margin: 0; padding: 20px;
+            background: #000; 
+            color: white;
+            font-family: 'Inter', sans-serif; 
+            margin: 0; 
+            padding: 20px;
+            overflow-x: hidden;
         }
-        h2 { color: #00d4ff; letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid #222; padding-bottom: 10px; }
+
+        h2 { 
+            color: #00d4ff; 
+            letter-spacing: 2px; 
+            text-transform: uppercase; 
+            border-bottom: 1px solid #222; 
+            padding-bottom: 10px;
+            font-weight: 200;
+        }
+
         .game-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px; margin-top: 20px;
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px; 
+            margin-top: 20px;
         }
+
         .game-card {
-            background: rgba(255,255,255,0.05); border: 1px solid #333;
-            border-radius: 8px; padding: 20px; text-align: center;
-            cursor: pointer; transition: 0.3s;
+            background: rgba(255,255,255,0.05); 
+            border: 1px solid #333;
+            border-radius: 12px; 
+            padding: 25px 15px; 
+            text-align: center;
+            cursor: pointer; 
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
         }
-        .game-card:hover { border-color: #00d4ff; transform: translateY(-5px); background: rgba(0, 212, 255, 0.1); }
-        .game-card i { font-size: 2.5rem; margin-bottom: 10px; display: block; }
-        span { font-size: 0.8rem; font-weight: bold; }
+
+        /* Hover Effects for PC */
+        .game-card:hover { 
+            border-color: #00d4ff; 
+            transform: translateY(-5px); 
+            background: rgba(0, 212, 255, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.2);
+        }
+
+        .game-card i { 
+            font-size: 2.2rem; 
+            color: #fff;
+        }
+
+        .game-card span { 
+            font-size: 0.7rem; 
+            font-weight: bold; 
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #aaa;
+        }
+
+        .game-card:hover span {
+            color: #fff;
+        }
+
+        /* Mobile specific spacing */
+        @media (max-width: 480px) {
+            .game-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
     </style>
 </head>
 <body>
+
     <h2><i class="fa-solid fa-gamepad"></i> Game Archives</h2>
+
     <div class="game-grid">
-        <a href="https://poki.com" target="_blank" style="text-decoration:none; color:inherit;">
-            <div class="game-card">
-                <i class="fa-solid fa-rocket"></i>
-                <span>Action Games</span>
-            </div>
-        </a>
-        <div class="game-card" onclick="alert('Coming soon, BOIII!')">
+        <div class="game-card" onclick="playAction()">
+            <i class="fa-solid fa-rocket"></i>
+            <span>Action</span>
+        </div>
+
+        <div class="game-card" onclick="alert('SYSTEMS OFFLINE... Puzzle core not found!')">
             <i class="fa-solid fa-puzzle-piece"></i>
             <span>Puzzles</span>
         </div>
-        <div class="game-card" onclick="alert('TUNG TUNG TUNG!')">
+
+        <div class="game-card" onclick="alert('TUNG TUNG TUNG! Racing engine starting soon!')">
             <i class="fa-solid fa-car"></i>
             <span>Racing</span>
         </div>
+
+        <div class="game-card" onclick="alert('LOCKED! Requires Triple T Clearance.')">
+            <i class="fa-solid fa-lock"></i>
+            <span>???</span>
+        </div>
     </div>
+
+    <script>
+        function playAction() {
+            // This replaces the old random link with a Triple T alert
+            alert("BOIII! No Action games loaded yet. Stay locked in!");
+        }
+    </script>
+
 </body>
 </html>
