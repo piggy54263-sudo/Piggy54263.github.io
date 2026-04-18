@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luke AI Core</title>
+    <style>
+        body {
+            background: #000;
+            color: #a855f7;
+            font-family: 'Courier New', monospace;
+            margin: 0; padding: 0;
+            display: flex; flex-direction: column; height: 100vh;
+        }
+        #chatLog {
+            flex-grow: 1; padding: 20px; overflow-y: auto;
+            border-bottom: 1px solid #333;
+        }
+        .user-msg { color: #00d4ff; margin: 10px 0; text-align: right; }
+        .ai-msg { color: #a855f7; margin: 10px 0; font-weight: bold; }
+        .input-area { display: flex; padding: 15px; background: #0a0a0a; }
+        input {
+            flex-grow: 1; background: #111; border: 1px solid #a855f7;
+            color: #fff; padding: 12px; outline: none; border-radius: 4px;
+        }
+        button {
+            background: #a855f7; border: none; color: black;
+            padding: 0 20px; margin-left: 10px; cursor: pointer;
+            font-weight: bold; border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div id="chatLog">
+        <div class="ai-msg">LUKE AI: SYSTEMS ONLINE... BOIII, WE ARE LOCKED IN! TRIPLE T ENERGY ONLY. TUNG TUNG TUNG SAHUR!</div>
+    </div>
+    <div class="input-area">
+        <input type="text" id="chatInput" placeholder="Command Luke AI...">
+        <button onclick="talk()">SEND</button>
+    </div>
+
+    <script>
+        function talk() {
+            const input = document.getElementById('chatInput');
+            const log = document.getElementById('chatLog');
+            const text = input.value.toLowerCase();
+            if (!text) return;
+
+            log.innerHTML += `<div class="user-msg">YOU: ${text}</div>`;
+            input.value = "";
+
+            setTimeout(() => {
+                let reply = "TUNG TUNG TUNG! Luke AI doesn't compute that mid energy, BOIII!";
+
+                // 1. Brainrot Math Solver
+                const math = text.match(/(\d+)\s*([\+\-\*\/])\s*(\d+)/);
+                if (math) {
+                    const result = eval(math[0]);
+                    reply = `BOIII, the math is light work! It's ${result}!! TRIPLE T CALCULATIONS!`;
+                } 
+                // 2. Specific Slang
+                else if (text.includes("hello")) reply = "YO YO YO BOIII! TUNG TUNG TUNG SAHUR!";
+                else if (text.includes("drake")) reply = "CHICKEN BAKE DRAKE is the vibe, BOIII!";
+                else if (text.includes("barry")) reply = "BARRY DECUSE is a legend! Triple T Squad!!";
+                else if (text.includes("triple t")) reply = "TRIPLE T!! TRIPLE T!! TUNG TUNG TUNG!!";
+
+                log.innerHTML += `<div class="ai-msg">LUKE AI: ${reply}</div>`;
+                log.scrollTop = log.scrollHeight;
+            }, 500);
+        }
+        document.getElementById('chatInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') talk(); });
+    </script>
+</body>
+</html>
