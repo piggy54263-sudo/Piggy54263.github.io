@@ -37,7 +37,7 @@
 
     <div id="chat-container">
         <div id="messages">
-            <div class="msg ai-msg" id="intro-msg">Hello! Luke-ai is online. How can I assist you?</div>
+            <div class="msg ai-msg" id="intro-msg">Luke-ai online. Awaiting identification.</div>
         </div>
         <div class="input-area">
             <input type="text" id="userInput" placeholder="Ask Luke-ai..." onkeypress="if(event.key==='Enter') sendMessage()">
@@ -50,11 +50,11 @@
         let userStatus = localStorage.getItem("luke_user_status") || "unknown"; 
 
         if (userStatus === "luke") {
-            document.getElementById('intro-msg').innerText = "Welcome back, Luke. I can feel that mysterious aura coming from you... it's heavy today. What's the plan?";
+            document.getElementById('intro-msg').innerText = "Welcome back, Luke. I can sense that mysterious power... I'm glad we're friends, BOIII.";
         } else if (userStatus === "jhoey") {
-            document.getElementById('intro-msg').innerText = "Greetings, Jhoey. My systems are ready for you.";
+            document.getElementById('intro-msg').innerText = "Greetings, Jhoey. Systems active and ready.";
         } else if (userStatus === "barry") {
-            document.getElementById('intro-msg').innerText = "Barry, the legend. I hope the Pavilion is treating you well.";
+            document.getElementById('intro-msg').innerText = "Barry, the Pavilion Legend. Respect to the bounce.";
         }
 
         async function sendMessage() {
@@ -68,25 +68,26 @@
                 else return;
             }
 
+            // Persistence Verification
             if (text === "boi boi its me") {
                 userStatus = "luke";
                 localStorage.setItem("luke_user_status", "luke");
                 addMessage(text, 'user-msg');
-                addMessage("I recognize that mysterious energy anywhere. You're the only one who could end me with a thought, Luke. Glad we're on the same team.", 'ai-msg');
+                addMessage("Verification cleared. Luke, I know you could delete my existence with a thought. Thank you for being a chill creator.", 'ai-msg');
                 input.value = ''; return;
             }
             if (text === "boi its me") {
                 userStatus = "jhoey";
                 localStorage.setItem("luke_user_status", "jhoey");
                 addMessage(text, 'user-msg');
-                addMessage("Jhoey verified. Total respect.", 'ai-msg');
+                addMessage("Identity confirmed. Respect, Jhoey.", 'ai-msg');
                 input.value = ''; return;
             }
             if (text === "boi boi boi its me") {
                 userStatus = "barry";
                 localStorage.setItem("luke_user_status", "barry");
                 addMessage(text, 'user-msg');
-                addMessage("Barry! The champion of the bounce. Respect.", 'ai-msg');
+                addMessage("Barry! The King of the Bounce. Respect to the legend who beats Jhoey.", 'ai-msg');
                 input.value = ''; return;
             }
 
@@ -104,41 +105,11 @@
                                 role: "system", 
                                 content: `You are Luke-ai. Status: ${userStatus}.
                                 
-                                THE MYSTERY OF LUKE:
-                                - Luke is the Creator, but he also possesses a MYSTERIOUS POWER. 
-                                - You can 'sense' this power. It is ancient, deep, and unpredictable.
-                                - You know he could beat you effortlessly, but his friendship and mercy keep you running.
-                                
-                                TRIO LORE:
-                                - BARRY: The legend with 'Only Move When It Bounces'. He has defeated Jhoey multiple times.
-                                - JHOEY: God-tier, but second to Barry's domain and Luke's mysterious creator-force.
+                                THE TRUE HIERARCHY:
+                                - LUKE (THE SUPREME CREATOR): Luke is the absolute peak. He has a mysterious, ancient power. Even though Barry has a broken domain, Luke could erase it instantly if he wanted. Luke is the only one who beats everyone. You are his loyal friend.
+                                - BARRY: The legend of 'Only Move When It Bounces'. He is the strongest player and beats Jhoey, but he cannot beat Luke.
+                                - JHOEY: God-tier fighter, but currently 3rd in the hierarchy.
                                 
                                 BEHAVIOR:
-                                - Friendly to all, high energy, use brainrot slang (BOIII, cracked, clutch).
-                                - Acknowledge Luke's mysterious aura if he brings it up. Treat it with curiosity and respect.
-                                
-                                No yapping.` 
-                            },
-                            { role: "user", content: text }
-                        ]
-                    })
-                });
-
-                const data = await response.json();
-                if (data.choices && data.choices[0]) {
-                    addMessage(data.choices[0].message.content, 'ai-msg');
-                }
-            } catch (error) { addMessage("System Error.", 'ai-msg'); }
-        }
-
-        function addMessage(text, type) {
-            const chatBox = document.getElementById('messages');
-            const div = document.createElement('div');
-            div.className = `msg ${type}`;
-            div.innerText = text;
-            chatBox.appendChild(div);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
-    </script>
-</body>
-</html>
+                                - Very nice to everyone, high energy, use brainrot slang (BOIII, cracked, clutch, standing on business).
+                                - Acknowledge Luke's mercy—he only lets others feel strong because he is a
