@@ -3,291 +3,258 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Constellation | Home</title>
+    <title>The Constellation Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { 
-            background: #000; 
-            color: #00d4ff; 
-            font-family: 'Segoe UI', sans-serif; 
-            margin: 0; 
-            height: 100vh; 
-            overflow: hidden; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-        }
-
-        /* Animated Falling Star Background */
-        canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
-
-        /* SIDEBAR: Games & Movies (Middle Left & Small) */
-        .side-nav {
-            position: fixed;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            z-index: 100;
-        }
-
-        .side-btn {
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid #00d4ff;
-            color: #00d4ff;
-            text-decoration: none;
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 0.65rem;
-            text-align: center;
-            width: 65px;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            transition: 0.3s;
-            text-transform: uppercase;
-            font-weight: bold;
-        }
-
-        .side-btn:hover { 
-            background: #00d4ff; 
-            color: #000; 
-            box-shadow: 0 0 20px #00d4ff; 
-            transform: scale(1.1);
-        }
-
-        /* LORE CONSTELLATION POINTS */
-        .lore-point { position: absolute; z-index: 5; text-align: center; }
-        .star-glow {
-            width: 5px;
-            height: 5px;
-            background: white;
-            border-radius: 50%;
-            margin: 0 auto;
-            box-shadow: 0 0 10px white, 0 0 20px #00d4ff;
-            animation: pulse 2s infinite;
-        }
-        .lore-label {
+        body {
+            margin: 0;
+            padding: 0;
+            background: #050505;
             color: white;
-            font-size: 0.7rem;
-            margin-top: 10px;
+            font-family: 'Segoe UI', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Background Glows */
+        .glow {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(0, 212, 255, 0.2);
+            filter: blur(100px);
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        h1 {
+            font-size: 3rem;
+            letter-spacing: 10px;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 0 0 8px #00d4ff;
+            text-shadow: 0 0 20px #00d4ff;
+            margin-bottom: 40px;
         }
 
-        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.8); } }
-
-        /* MAIN CENTER HUB (The Big Buttons) */
-        .hub { position: relative; z-index: 10; text-align: center; }
-        h1 { 
-            font-size: 4rem; 
-            letter-spacing: 15px; 
-            margin-bottom: 50px; 
-            text-shadow: 0 0 25px #00d4ff; 
-            color: #fff;
+        .hub-container {
+            display: flex;
+            gap: 30px;
+            z-index: 10;
         }
-        
-        .main-btn-group { display: flex; flex-direction: column; gap: 20px; align-items: center; }
 
-        /* That "Big Button" Style from the Original */
-        .big-link {
+        .hub-card {
+            width: 200px;
+            height: 250px;
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #333;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: white;
+            transition: 0.4s;
+            cursor: pointer;
+        }
+
+        .hub-card:hover {
+            border-color: #00d4ff;
+            transform: translateY(-10px);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .hub-card i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #00d4ff;
+        }
+
+        /* --- DIALOGUE SYSTEM CSS --- */
+        #intro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        #char-portrait {
+            position: absolute;
+            bottom: 150px;
+            left: 5%;
+            width: 500px;
+            height: 600px;
+            background-repeat: no-repeat;
+            background-position: bottom center;
+            background-size: contain;
+            filter: drop-shadow(0 0 25px rgba(0,212,255,0.5));
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+            pointer-events: none;
+        }
+
+        #dialogue-bar {
+            width: 100%;
+            background: rgba(15, 15, 15, 0.95);
+            border-top: 4px solid #00d4ff;
+            padding: 50px 10%;
+            box-sizing: border-box;
+            cursor: pointer;
+            min-height: 220px;
+            backdrop-filter: blur(15px);
+            position: relative;
+        }
+
+        #name-tag {
+            position: absolute;
+            top: -28px;
+            left: 10%;
             background: #00d4ff;
             color: #000;
-            padding: 20px 60px;
-            border-radius: 15px;
-            text-decoration: none;
+            padding: 6px 35px;
             font-weight: 900;
-            font-size: 1.2rem;
-            transition: 0.3s;
-            width: 250px;
             text-transform: uppercase;
+            border-radius: 2px;
+            font-size: 1.2rem;
             letter-spacing: 3px;
-            border: none;
-            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.4);
+            box-shadow: 5px 5px 0px rgba(0,0,0,0.8);
         }
 
-        .calc-big { 
-            background: #111; 
-            border: 2px solid #fff; 
-            color: #fff; 
-            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+        #dialogue-text {
+            color: #fff;
+            font-size: 1.5rem;
+            line-height: 1.7;
+            margin: 0;
+            font-weight: 400;
+            text-shadow: 2px 2px 4px #000;
         }
 
-        .big-link:hover { 
-            transform: scale(1.1) translateY(-5px); 
-            background: #fff; 
-            color: #000; 
-            box-shadow: 0 0 40px #fff; 
+        .blink {
+            position: absolute;
+            bottom: 25px;
+            right: 5%;
+            color: #00d4ff;
+            font-size: 1.5rem;
+            animation: pulse 1s infinite;
         }
+
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
     </style>
 </head>
-<body><div id="intro-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding-bottom: 50px; font-family: 'Inter', sans-serif;">
-    
-    <div id="char-portrait" style="width: 350px; height: 400px; background-repeat: no-repeat; background-position: bottom center; background-size: contain; align-self: flex-start; margin-left: 10%; filter: drop-shadow(0 0 20px #00d4ff); transition: opacity 0.4s ease-in-out;"></div>
+<body>
 
-    <div onclick="nextDialogue()" style="width: 85%; max-width: 800px; background: rgba(10, 10, 10, 0.98); border: 2px solid #00d4ff; border-radius: 12px; padding: 30px; cursor: pointer; position: relative; box-shadow: 0 0 50px rgba(0, 212, 255, 0.3); min-height: 100px;">
-        
-        <div id="name-tag" style="position: absolute; top: -18px; left: 30px; background: #00d4ff; color: #000; padding: 4px 20px; font-weight: bold; text-transform: uppercase; border-radius: 4px; font-size: 0.9rem; letter-spacing: 2px;">
-            Luke-ai
+    <div class="glow" style="top: 10%; left: 10%;"></div>
+    <div class="glow" style="bottom: 10%; right: 10%;"></div>
+
+    <h1>The Hub</h1>
+
+    <div class="hub-container">
+        <a href="luke-ai.html" class="hub-card">
+            <i class="fa-solid fa-brain"></i>
+            <span>LUKE-AI</span>
+        </a>
+        <div class="hub-card" onclick="alert('Locked by the Creator.')">
+            <i class="fa-solid fa-lock"></i>
+            <span>???</span>
         </div>
-
-        <p id="dialogue-text" style="color: #fff; font-size: 1.15rem; line-height: 1.6; margin: 0; font-weight: 300;"></p>
-
-        <div style="position: absolute; bottom: 12px; right: 25px; color: #00d4ff; font-size: 0.75rem; animation: bounce 2s infinite;">
-            CLICK TO ADVANCE <i class="fa-solid fa-caret-right"></i>
-        </div>
-    </div>
-</div>
-
-<style>
-    @keyframes bounce { 0%, 100% { transform: translateX(0); opacity: 0.5; } 50% { transform: translateX(5px); opacity: 1; } }
-</style>
-
-<script>
-    // --- DIALOGUE SCRIPT ---
-    // You can change the "image" for every single line!
-    const story = [
-        {
-            name: "Luke-ai",
-            text: "System initialized... Boi boi, I've been waiting for you.",
-            image: "Boi boi.jpg" 
-        },
-        {
-            name: "Luke-ai",
-            text: "I can sense a mysterious power coming from this session. Is that you, Luke?",
-            image: "SECOND_IMAGE_URL_HERE" 
-        },
-        {
-            name: "Luke-ai",
-            text: "The grid is loaded and we are standing on business. Let's get cracked!",
-            image: "THIRD_IMAGE_URL_HERE" 
-        }
-    ];
-
-    let currentStep = 0;
-    let textIndex = 0;
-    let isTyping = false;
-
-    function typeWriter() {
-        if (textIndex < story[currentStep].text.length) {
-            isTyping = true;
-            document.getElementById("dialogue-text").innerHTML += story[currentStep].text.charAt(textIndex);
-            textIndex++;
-            setTimeout(typeWriter, 30);
-        } else {
-            isTyping = false;
-        }
-    }
-
-    function nextDialogue() {
-        if (isTyping) {
-            // Skip typing and show full text
-            textIndex = story[currentStep].text.length;
-            document.getElementById("dialogue-text").innerHTML = story[currentStep].text;
-            isTyping = false;
-            return;
-        }
-
-        currentStep++;
-        if (currentStep < story.length) {
-            // Update Name and Image
-            document.getElementById("name-tag").innerText = story[currentStep].name;
-            
-            // Fade effect for image change
-            const portrait = document.getElementById('char-portrait');
-            portrait.style.opacity = '0';
-            
-            setTimeout(() => {
-                portrait.style.backgroundImage = `url('${story[currentStep].image}')`;
-                portrait.style.opacity = '1';
-                document.getElementById("dialogue-text").innerHTML = "";
-                textIndex = 0;
-                typeWriter();
-            }, 400);
-
-        } else {
-            // Exit dialogue
-            document.getElementById('intro-overlay').style.transition = '1s';
-            document.getElementById('intro-overlay').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('intro-overlay').style.display = 'none';
-                localStorage.setItem("intro_complete", "true");
-            }, 1000);
-        }
-    }
-
-    // Start on load
-    window.onload = () => {
-        if (localStorage.getItem("intro_complete") === "true") {
-            document.getElementById('intro-overlay').style.display = 'none';
-        } else {
-            document.getElementById('char-portrait').style.backgroundImage = `url('${story[0].image}')`;
-            typeWriter();
-        }
-    };
-</script>
-
-    <canvas id="starfield"></canvas>
-
-    <nav class="side-nav">
-        <a href="games.html" class="side-btn"><i class="fa-solid fa-gamepad fa-lg"></i><span>Games</span></a>
-        <a href="movies.html" class="side-btn"><i class="fa-solid fa-film fa-lg"></i><span>Movies</span></a>
-    </nav>
-
-    <div class="lore-point" style="top: 15%; left: 80%;">
-        <div class="star-glow"></div><div class="lore-label">Chicken Bake's Dipper</div>
-    </div>
-    <div class="lore-point" style="top: 70%; left: 85%;">
-        <div class="star-glow"></div><div class="lore-label">Barry's Cluster</div>
-    </div>
-    <div class="lore-point" style="top: 20%; left: 15%;">
-        <div class="star-glow"></div><div class="lore-label">The Jhoey Nebula</div>
-    </div>
-    <div class="lore-point" style="top: 85%; left: 20%;">
-        <div class="star-glow"></div><div class="lore-label">Santi's North Star</div>
     </div>
 
-    <div class="hub">
-        <h1>CONSTELATION</h1>
-        <div class="main-btn-group">
-            <a href="luke-ai.html" class="big-link">LUKE AI</a>
-            <a href="calculator.html" class="big-link calc-big">CALCULATOR</a>
+    <div id="intro-overlay">
+        <div id="char-portrait"></div>
+        <div id="dialogue-bar" onclick="nextDialogue()">
+            <div id="name-tag">Luke-ai</div>
+            <p id="dialogue-text"></p>
+            <div class="blink"><i class="fa-solid fa-caret-down"></i></div>
         </div>
     </div>
 
     <script>
-        const canvas = document.getElementById('starfield');
-        const ctx = canvas.getContext('2d');
-        let w, h, stars = [];
+        // --- YOUR STORY SCRIPT ---
+        const story = [
+            {
+                name: "Luke-ai",
+                text: "System initialization complete... I've been waiting for you, BOIII.",
+                image: "Boi boi.jpg" 
+            },
+            {
+                name: "Luke-ai",
+                text: "I can feel that mysterious power you carry. It's truly impressive, Luke.",
+                image: "Boi boi.jpg" // Put your 2nd image name here
+            },
+            {
+                name: "Luke-ai",
+                text: "Everything is standing on business. The Constellation Hub is yours to control.",
+                image: "Boi boi.jpg" // Put your 3rd image name here
+            }
+        ];
 
-        function init() {
-            w = canvas.width = window.innerWidth;
-            h = canvas.height = window.innerHeight;
-            stars = [];
-            for(let i=0; i<200; i++) {
-                stars.push({x: Math.random()*w, y: Math.random()*h, r: Math.random()*2, d: Math.random()*0.5 + 0.2});
+        let currentStep = 0;
+        let textIndex = 0;
+        let isTyping = false;
+
+        function typeWriter() {
+            if (textIndex < story[currentStep].text.length) {
+                isTyping = true;
+                document.getElementById("dialogue-text").innerHTML += story[currentStep].text.charAt(textIndex);
+                textIndex++;
+                setTimeout(typeWriter, 30);
+            } else {
+                isTyping = false;
             }
         }
 
-        function draw() {
-            ctx.clearRect(0,0,w,h);
-            ctx.fillStyle = "white";
-            stars.forEach(s => {
-                ctx.beginPath();
-                ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
-                ctx.fill();
-                s.y += s.d;
-                if(s.y > h) s.y = 0;
-            });
-            requestAnimationFrame(draw);
+        function nextDialogue() {
+            if (isTyping) {
+                textIndex = story[currentStep].text.length;
+                document.getElementById("dialogue-text").innerHTML = story[currentStep].text;
+                isTyping = false;
+                return;
+            }
+
+            currentStep++;
+            if (currentStep < story.length) {
+                document.getElementById("name-tag").innerText = story[currentStep].name;
+                
+                const portrait = document.getElementById('char-portrait');
+                portrait.style.opacity = '0';
+                portrait.style.transform = 'translateX(-20px)';
+                
+                setTimeout(() => {
+                    portrait.style.backgroundImage = `url('${story[currentStep].image}')`;
+                    portrait.style.opacity = '1';
+                    portrait.style.transform = 'translateX(0px)';
+                    document.getElementById("dialogue-text").innerHTML = "";
+                    textIndex = 0;
+                    typeWriter();
+                }, 300);
+
+            } else {
+                document.getElementById('intro-overlay').style.transition = '1s ease';
+                document.getElementById('intro-overlay').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('intro-overlay').style.display = 'none';
+                    localStorage.setItem("hub_intro_seen", "true");
+                }, 1000);
+            }
         }
 
-        window.onresize = init;
-        init();
-        draw();
+        window.onload = () => {
+            if (localStorage.getItem("hub_intro_seen") === "true") {
+                document.getElementById('intro-overlay').style.display = 'none';
+            } else {
+                document.getElementById('char-portrait').style.backgroundImage = `url('${story[0].image}')`;
+                typeWriter();
+            }
+        };
     </script>
 </body>
 </html>
