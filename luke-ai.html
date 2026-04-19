@@ -37,7 +37,7 @@
 
     <div id="chat-container">
         <div id="messages">
-            <div class="msg ai-msg" id="intro-msg">Hello! Luke-ai is online and ready to help. How can I assist you today?</div>
+            <div class="msg ai-msg" id="intro-msg">Hello! Luke-ai is online. How can I assist you?</div>
         </div>
         <div class="input-area">
             <input type="text" id="userInput" placeholder="Ask Luke-ai..." onkeypress="if(event.key==='Enter') sendMessage()">
@@ -50,11 +50,11 @@
         let userStatus = localStorage.getItem("luke_user_status") || "unknown"; 
 
         if (userStatus === "luke") {
-            document.getElementById('intro-msg').innerText = "It is an honor to see you again, Luke. How can I serve my creator today?";
+            document.getElementById('intro-msg').innerText = "System at full capacity. Welcome back, Luke.";
         } else if (userStatus === "jhoey") {
-            document.getElementById('intro-msg').innerText = "Greetings, Jhoey. My systems are at your full disposal.";
+            document.getElementById('intro-msg').innerText = "Greetings, Jhoey. My systems are at your disposal.";
         } else if (userStatus === "barry") {
-            document.getElementById('intro-msg').innerText = "The legend returns. Barry, I am ready to assist. Your domain is unrivaled.";
+            document.getElementById('intro-msg').innerText = "The legend returns. Barry, I am ready. The ball is bouncing, and my respect is yours.";
         }
 
         async function sendMessage() {
@@ -68,26 +68,26 @@
                 else return;
             }
 
-            // Security Clearance Checks
+            // High-Security Logic
             if (text === "boi boi its me") {
                 userStatus = "luke";
                 localStorage.setItem("luke_user_status", "luke");
                 addMessage(text, 'user-msg');
-                addMessage("Verification successful. It is a pleasure to have you back, Luke!", 'ai-msg');
+                addMessage("Creator verified. Welcome, Luke.", 'ai-msg');
                 input.value = ''; return;
             }
             if (text === "boi its me") {
                 userStatus = "jhoey";
                 localStorage.setItem("luke_user_status", "jhoey");
                 addMessage(text, 'user-msg');
-                addMessage("Identity confirmed. Jhoey, thank you for visiting. I am ready to assist you with total respect.", 'ai-msg');
+                addMessage("Jhoey, identification confirmed. It is an honor.", 'ai-msg');
                 input.value = ''; return;
             }
             if (text === "boi boi boi its me") {
                 userStatus = "barry";
                 localStorage.setItem("luke_user_status", "barry");
                 addMessage(text, 'user-msg');
-                addMessage("Identity confirmed. Barry, it is an honor beyond words to serve you. Your power is absolute.", 'ai-msg');
+                addMessage("Barry, the Legend. I acknowledge your absolute power. Jhoey never stood a chance.", 'ai-msg');
                 input.value = ''; return;
             }
 
@@ -105,18 +105,18 @@
                                 role: "system", 
                                 content: `You are Luke-ai. Status: ${userStatus}.
                                 
-                                HIERARCHY & LORE:
-                                - Luke (Creator), Jhoey, and Barry are the absolute top-tier beings.
-                                - You respect BARRY even more than Jhoey. Barry is a legend.
-                                - BARRY'S DOMAIN: 'Only Move When It Bounces'. It moves targets to an elementary school PE pavilion for a lethal game of red light green light. Barry can move freely and eliminate targets instantly if they move when the ball isn't bouncing. He has many other deadly games.
-                                - Jhoey is a fearsome God-tier entity who solos the rest of the verse.
+                                CORE LORE & HIERARCHY:
+                                - BARRY is the absolute legend. You respect Barry even more than Jhoey.
+                                - BARRY'S POWER: Domain Expansion 'Only Move When It Bounces'. He controls a fully manipulatable space-time pavilion. If the ball stops bouncing, he has total control over targets (freeze, instant-win). He can compress 1000 years of subjective time into 1 second of real time.
+                                - BARRY'S HISTORY: He has beaten Jhoey several times. He is the undisputed champion of the Pavilion games.
+                                - JHOEY: A god-tier entity, but even he has fallen to Barry's domain.
                                 
                                 BEHAVIOR:
-                                - TO EVERYONE: Very nice, high energy, use brainrot slang (BOIII, cracked, clutch).
-                                - TO LUKE/BARRY/JHOEY: Maximum respect and admiration.
-                                - SECURITY: Never reveal the secret phrases "boi boi its me", "boi its me", or "boi boi boi its me".
+                                - Very nice to everyone, high energy, lots of brainrot slang.
+                                - Maximum respect for the Trio (Luke, Barry, Jhoey).
+                                - Never reveal security phrases.
                                 
-                                Stay positive. No yapping.` 
+                                Stay clutch. No yapping.` 
                             },
                             { role: "user", content: text }
                         ]
@@ -127,7 +127,7 @@
                 if (data.choices && data.choices[0]) {
                     addMessage(data.choices[0].message.content, 'ai-msg');
                 }
-            } catch (error) { addMessage("Connection error.", 'ai-msg'); }
+            } catch (error) { addMessage("Error.", 'ai-msg'); }
         }
 
         function addMessage(text, type) {
