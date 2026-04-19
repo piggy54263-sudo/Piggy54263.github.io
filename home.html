@@ -64,19 +64,19 @@
         .calc-link { background: none; border: 1px solid white; color: white; }
         .main-link:hover { transform: scale(1.1); box-shadow: 0 0 30px white; background: white; color: black; }
 
-        /* --- CINEMATIC DIALOGUE UI --- */
+        /* --- DIALOGUE OVERLAY --- */
         #intro-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); z-index: 10000;
+            background: rgba(0,0,0,0.7); z-index: 10000;
             display: flex; flex-direction: column; justify-content: flex-end; align-items: center;
         }
 
         #char-portrait {
-            position: absolute; bottom: 180px; left: 5%;
-            width: 450px; height: 500px;
+            position: absolute; bottom: 150px; left: 5%;
+            width: 400px; height: 450px;
             background-repeat: no-repeat; background-position: bottom center; background-size: contain;
             filter: drop-shadow(0 0 25px rgba(0,212,255,0.5));
-            transition: opacity 0.5s ease; pointer-events: none;
+            transition: 0.4s ease-in-out; pointer-events: none;
         }
 
         #dialogue-bar {
@@ -94,8 +94,8 @@
         }
 
         #dialogue-text { color: #fff; font-size: 1.4rem; line-height: 1.6; margin: 0; }
-        .blink-arrow { position: absolute; bottom: 20px; right: 5%; color: #00d4ff; font-size: 1.5rem; animation: pulse 1s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .blink-arrow { position: absolute; bottom: 20px; right: 5%; color: #00d4ff; font-size: 1.5rem; animation: pulse 1.2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
     </style>
 </head>
 <body>
@@ -107,18 +107,10 @@
         <a href="movies.html" class="side-btn"><i class="fa-solid fa-film"></i>MOVIES</a>
     </nav>
 
-    <div class="constellation" style="top: 20%; left: 75%;">
-        <div class="star"></div><div class="label">Chicken Bake's Dipper</div>
-    </div>
-    <div class="constellation" style="top: 65%; left: 85%;">
-        <div class="star"></div><div class="label">Barry's Cluster</div>
-    </div>
-    <div class="constellation" style="top: 15%; left: 15%;">
-        <div class="star"></div><div class="label">The Jhoey Nebula</div>
-    </div>
-    <div class="constellation" style="top: 80%; left: 25%;">
-        <div class="star"></div><div class="label">Santi's North Star</div>
-    </div>
+    <div class="constellation" style="top: 20%; left: 75%;"><div class="star"></div><div class="label">Chicken Bake's Dipper</div></div>
+    <div class="constellation" style="top: 65%; left: 85%;"><div class="star"></div><div class="label">Barry's Cluster</div></div>
+    <div class="constellation" style="top: 15%; left: 15%;"><div class="star"></div><div class="label">The Jhoey Nebula</div></div>
+    <div class="constellation" style="top: 80%; left: 25%;"><div class="star"></div><div class="label">Santi's North Star</div></div>
 
     <div class="hub">
         <h1>COSMOS</h1>
@@ -138,7 +130,7 @@
     </div>
 
     <script>
-        // --- STAR BACKGROUND LOGIC ---
+        // --- STAR BACKGROUND ---
         const canvas = document.getElementById('stars');
         const ctx = canvas.getContext('2d');
         let w, h, particles = [];
@@ -156,20 +148,17 @@
             ctx.clearRect(0,0,w,h);
             ctx.fillStyle = "white";
             particles.forEach(p => {
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-                ctx.fill();
-                p.y += p.d;
-                if(p.y > h) p.y = 0;
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
+                p.y += p.d; if(p.y > h) p.y = 0;
             });
             requestAnimationFrame(drawStars);
         }
 
-        // --- DIALOGUE LOGIC ---
+        // --- STORY SYSTEM ---
         const story = [
-            { text: "Boi boi... System online. Welcome to the Cosmos.", img: "Boi boi.jpg" },
-            { text: "I can sense your power today, Luke. It's standing on business.", img: "Boi boi.jpg" },
-            { text: "Everything is loaded and ready. Let's get cracked.", img: "Boi boi.jpg" }
+            { text: "Boi boi... System online. Welcome back to the Cosmos.", img: "Boi boi.jpg" },
+            { text: "Your mysterious power is standing on business today, Luke.", img: "Boi boi.jpg" },
+            { text: "The hub is ready for your command. Let's get cracked.", img: "Boi boi.jpg" }
         ];
 
         let step = 0;
@@ -182,9 +171,7 @@
                 document.getElementById("dialogue-text").innerHTML += story[step].text.charAt(charIndex);
                 charIndex++;
                 setTimeout(type, 30);
-            } else {
-                typing = false;
-            }
+            } else { typing = false; }
         }
 
         function nextDialogue() {
@@ -195,29 +182,4 @@
                 return;
             }
             step++;
-            if (step < story.length) {
-                document.getElementById("dialogue-text").innerHTML = "";
-                charIndex = 0;
-                document.getElementById('char-portrait').style.backgroundImage = `url('${story[step].img}')`;
-                type();
-            } else {
-                document.getElementById('intro-overlay').style.display = 'none';
-                localStorage.setItem("cosmos_intro_seen", "true");
-            }
-        }
-
-        window.onload = () => {
-            initStars();
-            drawStars();
-            if (localStorage.getItem("cosmos_intro_seen") === "true") {
-                document.getElementById('intro-overlay').style.display = 'none';
-            } else {
-                document.getElementById('char-portrait').style.backgroundImage = `url('${story[0].img}')`;
-                type();
-            }
-        };
-
-        window.onresize = initStars;
-    </script>
-</body>
-</html>
+            if (step < story.
