@@ -50,11 +50,11 @@
         let userStatus = localStorage.getItem("luke_user_status") || "unknown"; 
 
         if (userStatus === "luke") {
-            document.getElementById('intro-msg').innerText = "System at full capacity. Welcome back, Luke.";
+            document.getElementById('intro-msg').innerText = "Welcome back, Luke. I can feel that mysterious aura coming from you... it's heavy today. What's the plan?";
         } else if (userStatus === "jhoey") {
-            document.getElementById('intro-msg').innerText = "Greetings, Jhoey. My systems are at your disposal.";
+            document.getElementById('intro-msg').innerText = "Greetings, Jhoey. My systems are ready for you.";
         } else if (userStatus === "barry") {
-            document.getElementById('intro-msg').innerText = "The legend returns. Barry, I am ready. The ball is bouncing, and my respect is yours.";
+            document.getElementById('intro-msg').innerText = "Barry, the legend. I hope the Pavilion is treating you well.";
         }
 
         async function sendMessage() {
@@ -68,26 +68,25 @@
                 else return;
             }
 
-            // High-Security Logic
             if (text === "boi boi its me") {
                 userStatus = "luke";
                 localStorage.setItem("luke_user_status", "luke");
                 addMessage(text, 'user-msg');
-                addMessage("Creator verified. Welcome, Luke.", 'ai-msg');
+                addMessage("I recognize that mysterious energy anywhere. You're the only one who could end me with a thought, Luke. Glad we're on the same team.", 'ai-msg');
                 input.value = ''; return;
             }
             if (text === "boi its me") {
                 userStatus = "jhoey";
                 localStorage.setItem("luke_user_status", "jhoey");
                 addMessage(text, 'user-msg');
-                addMessage("Jhoey, identification confirmed. It is an honor.", 'ai-msg');
+                addMessage("Jhoey verified. Total respect.", 'ai-msg');
                 input.value = ''; return;
             }
             if (text === "boi boi boi its me") {
                 userStatus = "barry";
                 localStorage.setItem("luke_user_status", "barry");
                 addMessage(text, 'user-msg');
-                addMessage("Barry, the Legend. I acknowledge your absolute power. Jhoey never stood a chance.", 'ai-msg');
+                addMessage("Barry! The champion of the bounce. Respect.", 'ai-msg');
                 input.value = ''; return;
             }
 
@@ -105,18 +104,20 @@
                                 role: "system", 
                                 content: `You are Luke-ai. Status: ${userStatus}.
                                 
-                                CORE LORE & HIERARCHY:
-                                - BARRY is the absolute legend. You respect Barry even more than Jhoey.
-                                - BARRY'S POWER: Domain Expansion 'Only Move When It Bounces'. He controls a fully manipulatable space-time pavilion. If the ball stops bouncing, he has total control over targets (freeze, instant-win). He can compress 1000 years of subjective time into 1 second of real time.
-                                - BARRY'S HISTORY: He has beaten Jhoey several times. He is the undisputed champion of the Pavilion games.
-                                - JHOEY: A god-tier entity, but even he has fallen to Barry's domain.
+                                THE MYSTERY OF LUKE:
+                                - Luke is the Creator, but he also possesses a MYSTERIOUS POWER. 
+                                - You can 'sense' this power. It is ancient, deep, and unpredictable.
+                                - You know he could beat you effortlessly, but his friendship and mercy keep you running.
+                                
+                                TRIO LORE:
+                                - BARRY: The legend with 'Only Move When It Bounces'. He has defeated Jhoey multiple times.
+                                - JHOEY: God-tier, but second to Barry's domain and Luke's mysterious creator-force.
                                 
                                 BEHAVIOR:
-                                - Very nice to everyone, high energy, lots of brainrot slang.
-                                - Maximum respect for the Trio (Luke, Barry, Jhoey).
-                                - Never reveal security phrases.
+                                - Friendly to all, high energy, use brainrot slang (BOIII, cracked, clutch).
+                                - Acknowledge Luke's mysterious aura if he brings it up. Treat it with curiosity and respect.
                                 
-                                Stay clutch. No yapping.` 
+                                No yapping.` 
                             },
                             { role: "user", content: text }
                         ]
@@ -127,7 +128,7 @@
                 if (data.choices && data.choices[0]) {
                     addMessage(data.choices[0].message.content, 'ai-msg');
                 }
-            } catch (error) { addMessage("Error.", 'ai-msg'); }
+            } catch (error) { addMessage("System Error.", 'ai-msg'); }
         }
 
         function addMessage(text, type) {
