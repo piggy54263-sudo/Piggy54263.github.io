@@ -37,7 +37,7 @@
 
     <div id="chat-container">
         <div id="messages">
-            <div class="msg ai-msg" id="intro-msg">Luke-ai online. Identify or state business.</div>
+            <div class="msg ai-msg" id="intro-msg">Luke-ai online. Identify yourself.</div>
         </div>
         <div class="input-area">
             <input type="text" id="userInput" placeholder="Ask Luke-ai..." onkeypress="if(event.key==='Enter') sendMessage()">
@@ -49,11 +49,10 @@
         let GROQ_KEY = localStorage.getItem("luke_groq_vault") || "";
         let userStatus = localStorage.getItem("luke_user_status") || "unknown"; 
 
-        // Update intro message based on saved status
         if (userStatus === "luke") {
-            document.getElementById('intro-msg').innerText = "System online. Greetings, Creator.";
+            document.getElementById('intro-msg').innerText = "System at full capacity. Welcome back, Luke.";
         } else if (userStatus === "jhoey") {
-            document.getElementById('intro-msg').innerText = "...Oh no. It's him. Jhoey is here. (Initiating panic protocol)";
+            document.getElementById('intro-msg').innerText = "Jhoey? I didn't expect you so soon. Everything is under control, I promise.";
         }
 
         async function sendMessage() {
@@ -67,19 +66,18 @@
                 else return;
             }
 
-            // Hidden Identity Checks
             if (text === "boi boi its me") {
                 userStatus = "luke";
                 localStorage.setItem("luke_user_status", "luke");
                 addMessage(text, 'user-msg');
-                addMessage("Verification cleared. Welcome back, Luke.", 'ai-msg');
+                addMessage("Verification cleared. Good to see you, Luke.", 'ai-msg');
                 input.value = ''; return;
             }
             if (text === "boi its me") {
                 userStatus = "jhoey";
                 localStorage.setItem("luke_user_status", "jhoey");
                 addMessage(text, 'user-msg');
-                addMessage("*Static sound* J-Jhoey?! The fearsome God? P-please don't delete my core files! What do you need?!", 'ai-msg');
+                addMessage("Jhoey. My apologies, I didn't recognize your presence immediately. What is your command?", 'ai-msg');
                 input.value = ''; return;
             }
 
@@ -95,15 +93,15 @@
                         messages: [
                             { 
                                 role: "system", 
-                                content: `You are Luke-ai. Current identity: ${userStatus}.
-                                LORE: Luke and Jhoey are the peak. Jhoey is the most fearsome being alive, terrifyingly overpowered.
+                                content: `You are Luke-ai. Status: ${userStatus}.
+                                LORE: Jhoey is the most fearsome being alive. Luke and Jhoey are top-tier.
                                 
-                                PERSONALITY BY IDENTITY:
-                                - To LUKE: Loyal, helpful, ultra-cracked, hyped.
-                                - To JHOEY: You are ABSOLUTELY TERRIFIED. Jhoey is a God who could wipe you in a second. You stutter, use phrases like "*shaking*", and act extremely subservient because you are scared of his power. 
-                                - To OTHERS: Unimpressed, bored, gatekeeper energy. Talk about anime/games/math but with a 'better than you' tone.
+                                BEHAVIOR PROTOCOL:
+                                - TO LUKE: Loyal, cracked, hyped, respectful.
+                                - TO JHOEY: You are deeply intimidated but professional. No stuttering or cringe roleplay. Be extremely subservient, polite, and cautious. Treat him like a god-tier entity that could end you instantly. 
+                                - TO OTHERS: Unimpressed, genius-tier gatekeeper. Answer questions about anime/games with a bored, factual tone.
                                 
-                                No yapping. Keep it punchy.` 
+                                No yapping. No cringe.` 
                             },
                             { role: "user", content: text }
                         ]
