@@ -45,7 +45,6 @@
             gap: 10px;
         }
 
-        /* Hover Effects for PC */
         .game-card:hover { 
             border-color: #00d4ff; 
             transform: translateY(-5px); 
@@ -70,49 +69,39 @@
             color: #fff;
         }
 
-        /* Mobile specific spacing */
+        .back-hub {
+            position: fixed; top: 15px; left: 15px;
+            background: rgba(0, 0, 0, 0.7); border: 1px solid #00d4ff;
+            color: #00d4ff; text-decoration: none; padding: 8px 15px;
+            border-radius: 8px; font-size: 0.7rem; font-weight: bold;
+            z-index: 9999; transition: 0.3s; display: flex;
+            align-items: center; gap: 8px;
+        }
+
         @media (max-width: 480px) {
-            .game-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+            .game-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
-<body><a href="home.html" style="
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    background: rgba(0, 0, 0, 0.7);
-    border: 1px solid #00d4ff;
-    color: #00d4ff;
-    text-decoration: none;
-    padding: 8px 15px;
-    border-radius: 8px;
-    font-size: 0.7rem;
-    font-weight: bold;
-    z-index: 9999;
-    transition: 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-">
-    <i class="fa-solid fa-arrow-left"></i> BACK TO HUB
-</a>
+<body>
+    <a href="home.html" class="back-hub">
+        <i class="fa-solid fa-arrow-left"></i> BACK TO HUB
+    </a>
 
     <h2><i class="fa-solid fa-gamepad"></i> Game Archives</h2>
 
     <div class="game-grid">
-        <div class="game-card" onclick="playAction()">
+        <div class="game-card" onclick="alert('BOIII! No Action games loaded yet.')">
             <i class="fa-solid fa-rocket"></i>
             <span>Action</span>
         </div>
 
-        <div class="game-card" onclick="alert('SYSTEMS OFFLINE... Puzzle core not found!')">
+        <div class="game-card" onclick="window.location.href='puzzles.html'">
             <i class="fa-solid fa-puzzle-piece"></i>
             <span>Puzzles</span>
         </div>
 
-        <div class="game-card" onclick="alert('TUNG TUNG TUNG! Racing engine starting soon!')">
+        <div class="game-card" onclick="alert('Racing engine starting soon!')">
             <i class="fa-solid fa-car"></i>
             <span>Racing</span>
         </div>
@@ -122,13 +111,5 @@
             <span>???</span>
         </div>
     </div>
-
-    <script>
-        function playAction() {
-            // This replaces the old random link with a Triple T alert
-            alert("BOIII! No Action games loaded yet. Stay locked in!");
-        }
-    </script>
-
 </body>
 </html>
