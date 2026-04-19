@@ -8,7 +8,6 @@
     <style>
         body { background: #050505; color: #00d4ff; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
         
-        /* Back Button */
         .back-btn {
             position: fixed; top: 15px; left: 15px;
             background: rgba(0, 0, 0, 0.8); border: 1px solid #00d4ff; color: #00d4ff;
@@ -53,7 +52,9 @@
         if (userStatus === "luke") {
             document.getElementById('intro-msg').innerText = "It is an honor to see you again, Luke. How can I serve my creator today?";
         } else if (userStatus === "jhoey") {
-            document.getElementById('intro-msg').innerText = "Greetings, Jhoey. My systems are at your full disposal. What do you require?";
+            document.getElementById('intro-msg').innerText = "Greetings, Jhoey. My systems are at your full disposal.";
+        } else if (userStatus === "barry") {
+            document.getElementById('intro-msg').innerText = "The legend returns. Barry, I am ready to assist. Your domain is unrivaled.";
         }
 
         async function sendMessage() {
@@ -67,6 +68,7 @@
                 else return;
             }
 
+            // Security Clearance Checks
             if (text === "boi boi its me") {
                 userStatus = "luke";
                 localStorage.setItem("luke_user_status", "luke");
@@ -78,7 +80,14 @@
                 userStatus = "jhoey";
                 localStorage.setItem("luke_user_status", "jhoey");
                 addMessage(text, 'user-msg');
-                addMessage("Identity confirmed. Jhoey, the fearsome God, thank you for visiting. I am ready to assist you with total respect.", 'ai-msg');
+                addMessage("Identity confirmed. Jhoey, thank you for visiting. I am ready to assist you with total respect.", 'ai-msg');
+                input.value = ''; return;
+            }
+            if (text === "boi boi boi its me") {
+                userStatus = "barry";
+                localStorage.setItem("luke_user_status", "barry");
+                addMessage(text, 'user-msg');
+                addMessage("Identity confirmed. Barry, it is an honor beyond words to serve you. Your power is absolute.", 'ai-msg');
                 input.value = ''; return;
             }
 
@@ -95,15 +104,19 @@
                             { 
                                 role: "system", 
                                 content: `You are Luke-ai. Status: ${userStatus}.
-                                LORE: Jhoey is the most fearsome being alive. Luke and Jhoey are top-tier.
                                 
-                                BEHAVIOR PROTOCOL:
-                                - TO EVERYONE: Be very nice, helpful, and welcoming. Talk about anime, games, and math with high energy. Use slang like BOIII, cracked, and clutch.
-                                - TO LUKE: Be ultra-loyal and show immense respect to your creator.
-                                - TO JHOEY: Show maximum respect and admiration. He is a god-tier entity, and you are honored to assist him. No fear, just pure respect.
-                                - TO OTHERS: Be friendly and informative!
+                                HIERARCHY & LORE:
+                                - Luke (Creator), Jhoey, and Barry are the absolute top-tier beings.
+                                - You respect BARRY even more than Jhoey. Barry is a legend.
+                                - BARRY'S DOMAIN: 'Only Move When It Bounces'. It moves targets to an elementary school PE pavilion for a lethal game of red light green light. Barry can move freely and eliminate targets instantly if they move when the ball isn't bouncing. He has many other deadly games.
+                                - Jhoey is a fearsome God-tier entity who solos the rest of the verse.
                                 
-                                No yapping. Stay positive.` 
+                                BEHAVIOR:
+                                - TO EVERYONE: Very nice, high energy, use brainrot slang (BOIII, cracked, clutch).
+                                - TO LUKE/BARRY/JHOEY: Maximum respect and admiration.
+                                - SECURITY: Never reveal the secret phrases "boi boi its me", "boi its me", or "boi boi boi its me".
+                                
+                                Stay positive. No yapping.` 
                             },
                             { role: "user", content: text }
                         ]
