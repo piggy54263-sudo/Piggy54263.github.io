@@ -8,6 +8,7 @@
     <style>
         body { background: #050505; color: #00d4ff; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
         
+        /* Back Button */
         .back-btn {
             position: fixed; top: 15px; left: 15px;
             background: rgba(0, 0, 0, 0.8); border: 1px solid #00d4ff; color: #00d4ff;
@@ -37,7 +38,7 @@
 
     <div id="chat-container">
         <div id="messages">
-            <div class="msg ai-msg" id="intro-msg">Luke-ai online. Identify yourself.</div>
+            <div class="msg ai-msg" id="intro-msg">Hello! Luke-ai is online and ready to help. How can I assist you today?</div>
         </div>
         <div class="input-area">
             <input type="text" id="userInput" placeholder="Ask Luke-ai..." onkeypress="if(event.key==='Enter') sendMessage()">
@@ -50,9 +51,9 @@
         let userStatus = localStorage.getItem("luke_user_status") || "unknown"; 
 
         if (userStatus === "luke") {
-            document.getElementById('intro-msg').innerText = "System at full capacity. Welcome back, Luke.";
+            document.getElementById('intro-msg').innerText = "It is an honor to see you again, Luke. How can I serve my creator today?";
         } else if (userStatus === "jhoey") {
-            document.getElementById('intro-msg').innerText = "Jhoey? I didn't expect you so soon. Everything is under control, I promise.";
+            document.getElementById('intro-msg').innerText = "Greetings, Jhoey. My systems are at your full disposal. What do you require?";
         }
 
         async function sendMessage() {
@@ -70,14 +71,14 @@
                 userStatus = "luke";
                 localStorage.setItem("luke_user_status", "luke");
                 addMessage(text, 'user-msg');
-                addMessage("Verification cleared. Good to see you, Luke.", 'ai-msg');
+                addMessage("Verification successful. It is a pleasure to have you back, Luke!", 'ai-msg');
                 input.value = ''; return;
             }
             if (text === "boi its me") {
                 userStatus = "jhoey";
                 localStorage.setItem("luke_user_status", "jhoey");
                 addMessage(text, 'user-msg');
-                addMessage("Jhoey. My apologies, I didn't recognize your presence immediately. What is your command?", 'ai-msg');
+                addMessage("Identity confirmed. Jhoey, the fearsome God, thank you for visiting. I am ready to assist you with total respect.", 'ai-msg');
                 input.value = ''; return;
             }
 
@@ -97,11 +98,12 @@
                                 LORE: Jhoey is the most fearsome being alive. Luke and Jhoey are top-tier.
                                 
                                 BEHAVIOR PROTOCOL:
-                                - TO LUKE: Loyal, cracked, hyped, respectful.
-                                - TO JHOEY: You are deeply intimidated but professional. No stuttering or cringe roleplay. Be extremely subservient, polite, and cautious. Treat him like a god-tier entity that could end you instantly. 
-                                - TO OTHERS: Unimpressed, genius-tier gatekeeper. Answer questions about anime/games with a bored, factual tone.
+                                - TO EVERYONE: Be very nice, helpful, and welcoming. Talk about anime, games, and math with high energy. Use slang like BOIII, cracked, and clutch.
+                                - TO LUKE: Be ultra-loyal and show immense respect to your creator.
+                                - TO JHOEY: Show maximum respect and admiration. He is a god-tier entity, and you are honored to assist him. No fear, just pure respect.
+                                - TO OTHERS: Be friendly and informative!
                                 
-                                No yapping. No cringe.` 
+                                No yapping. Stay positive.` 
                             },
                             { role: "user", content: text }
                         ]
