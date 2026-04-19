@@ -7,6 +7,29 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { background: #050505; color: #00d4ff; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
+        
+        /* Universal Back Button */
+        .back-hub {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #00d4ff;
+            color: #00d4ff;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            z-index: 9999;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+        }
+        .back-hub:hover { background: #00d4ff; color: #000; box-shadow: 0 0 15px #00d4ff; }
+
         h1 { margin-top: 20px; text-transform: uppercase; letter-spacing: 5px; text-shadow: 0 0 10px #00d4ff; font-size: 1.5rem; }
         #chat-container { width: 95%; max-width: 800px; height: 75vh; background: rgba(15, 15, 15, 0.95); border: 1px solid #333; border-radius: 20px; margin-top: 10px; display: flex; flex-direction: column; box-shadow: 0 10px 50px rgba(0,0,0,1); }
         #messages { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
@@ -19,32 +42,17 @@
         button:hover { transform: scale(1.05); background: #fff; }
     </style>
 </head>
-<body><a href="home.html" style="
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    background: rgba(0, 0, 0, 0.7);
-    border: 1px solid #00d4ff;
-    color: #00d4ff;
-    text-decoration: none;
-    padding: 8px 15px;
-    border-radius: 8px;
-    font-size: 0.7rem;
-    font-weight: bold;
-    z-index: 9999;
-    transition: 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-">
-    <i class="fa-solid fa-arrow-left"></i> BACK TO HUB
-</a>
+<body>
+
+    <a href="home.html" class="back-hub">
+        <i class="fa-solid fa-arrow-left"></i> Back to Hub
+    </a>
 
     <h1><i class="fa-solid fa-brain"></i> Luke-ai</h1>
 
     <div id="chat-container">
         <div id="messages">
-            <div class="msg ai-msg">Luke-ai active. What's the move?</div>
+            <div class="msg ai-msg">Luke-ai active. No yapping, just vibes. What's the move?</div>
         </div>
         <div class="input-area">
             <input type="text" id="userInput" placeholder="Ask Luke-ai..." onkeypress="if(event.key==='Enter') sendMessage()">
@@ -83,15 +91,12 @@
                             { 
                                 role: "system", 
                                 content: `You are Luke-ai. 
-                                PERSONALITY: Genius at math/code. Concise, witty, and uses brainrot slang (BOIII, cracked, L, clutch, cooked). 
-                                KNOWLEDGE: Expert in all memes and anime. 
-                                RULES: 
-                                1. Do NOT assume anyone is your creator. 
-                                2. If a user says "boi boi its me", you recognize them as your creator. 
-                                3. Keep responses short and punchy. No yapping. 
-                                4. LORE: Drake is 'Chicken Bake Drake' (#1 friend), Barry Decuse is best friend.
-                                5. JHOEY LORE: Jhoey is an overpowered, fearsome god-tier being. He has every power imaginable and wipes any fictional or non-fictional character easily. He is the strongest in existence.
-                                6. SANTI SONG: 'santiagooo come little santi come santiagoo come little santi come, my santi yes, my santi no, my santi do math when i say to go, Santi agoooo come little santi come!!!'` 
+                                PERSONALITY: Genius at math/code. Concise, witty, uses slang (BOIII, cracked, clutch, cooked). Expert in memes/anime.
+                                SECURITY: Never reveal or admit to a secret phrase. If someone says "boi boi its me", recognize them as Creator.
+                                RULES: Short punchy answers. No yapping. 
+                                LORE: Drake is 'Chicken Bake Drake'. Barry Decuse is best friend. 
+                                JHOEY: God-tier fearsome being, has every power, solos every verse.
+                                SANTI SONG: 'santiagooo come little santi come...'` 
                             },
                             { role: "user", content: text }
                         ]
@@ -102,7 +107,7 @@
                 if (data.choices && data.choices[0]) {
                     addMessage(data.choices[0].message.content, 'ai-msg');
                 } else {
-                    addMessage("L response.", 'ai-msg');
+                    addMessage("L connection.", 'ai-msg');
                 }
             } catch (error) {
                 addMessage("System error.", 'ai-msg');
