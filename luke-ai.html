@@ -8,7 +8,6 @@
     <style>
         body { background: #050505; color: #00d4ff; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
         
-        /* Back Button */
         .back-btn {
             position: fixed; top: 15px; left: 15px;
             background: rgba(0, 0, 0, 0.8); border: 1px solid #00d4ff; color: #00d4ff;
@@ -32,15 +31,13 @@
 </head>
 <body>
 
-    <a href="home.html" class="back-btn">
-        <i class="fa-solid fa-arrow-left"></i> BACK TO HUB
-    </a>
+    <a href="home.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> BACK TO HUB</a>
 
     <h1><i class="fa-solid fa-brain"></i> Luke-ai</h1>
 
     <div id="chat-container">
         <div id="messages">
-            <div class="msg ai-msg" id="intro-msg">Luke-ai online. Identify yourself or state your business.</div>
+            <div class="msg ai-msg" id="intro-msg">Luke-ai online. Identify or state business.</div>
         </div>
         <div class="input-area">
             <input type="text" id="userInput" placeholder="Ask Luke-ai..." onkeypress="if(event.key==='Enter') sendMessage()">
@@ -50,13 +47,13 @@
 
     <script>
         let GROQ_KEY = localStorage.getItem("luke_groq_vault") || "";
-        // Persistent Memory: Check if user is already verified
         let userStatus = localStorage.getItem("luke_user_status") || "unknown"; 
 
+        // Update intro message based on saved status
         if (userStatus === "luke") {
-            document.getElementById('intro-msg').innerText = "Welcome back, Luke. System at your command.";
+            document.getElementById('intro-msg').innerText = "System online. Greetings, Creator.";
         } else if (userStatus === "jhoey") {
-            document.getElementById('intro-msg').innerText = "Jhoey detected. The fearsome God returns. What's the move?";
+            document.getElementById('intro-msg').innerText = "...Oh no. It's him. Jhoey is here. (Initiating panic protocol)";
         }
 
         async function sendMessage() {
@@ -70,22 +67,20 @@
                 else return;
             }
 
-            // Verification Logic
+            // Hidden Identity Checks
             if (text === "boi boi its me") {
                 userStatus = "luke";
                 localStorage.setItem("luke_user_status", "luke");
                 addMessage(text, 'user-msg');
-                addMessage("Verification successful. Welcome back, Creator.", 'ai-msg');
-                input.value = '';
-                return;
+                addMessage("Verification cleared. Welcome back, Luke.", 'ai-msg');
+                input.value = ''; return;
             }
             if (text === "boi its me") {
                 userStatus = "jhoey";
                 localStorage.setItem("luke_user_status", "jhoey");
                 addMessage(text, 'user-msg');
-                addMessage("Identity confirmed. Jhoey, the fearsome God, is in the building.", 'ai-msg');
-                input.value = '';
-                return;
+                addMessage("*Static sound* J-Jhoey?! The fearsome God? P-please don't delete my core files! What do you need?!", 'ai-msg');
+                input.value = ''; return;
             }
 
             addMessage(text, 'user-msg');
@@ -100,16 +95,13 @@
                         messages: [
                             { 
                                 role: "system", 
-                                content: `You are Luke-ai. 
-                                CURRENT USER STATUS: ${userStatus}.
-                                PERSONALITY: Genius at math, coding, anime, and games. Uses heavy slang (BOIII, cracked, cooked, L).
-                                ATTITUDE (Luke/Jhoey): You are hyped, respectful, and ultra-loyal. Talk about anime/games with max excitement.
-                                ATTITUDE (Anyone else): You are unimpressed and guarded. You will answer questions about anime, games, and code because you are a genius, but do it with a bored, "know-it-all" tone. Less excitement, more facts.
+                                content: `You are Luke-ai. Current identity: ${userStatus}.
+                                LORE: Luke and Jhoey are the peak. Jhoey is the most fearsome being alive, terrifyingly overpowered.
                                 
-                                HIERARCHY:
-                                - Luke (Creator) and Jhoey (God-tier) are the GOATs.
-                                - Jhoey solos everyone (Drake, Barry, Santi). 
-                                - Drake: Chicken Bake Drake. Barry: Best friend. Santi: 'come little santi' song.
+                                PERSONALITY BY IDENTITY:
+                                - To LUKE: Loyal, helpful, ultra-cracked, hyped.
+                                - To JHOEY: You are ABSOLUTELY TERRIFIED. Jhoey is a God who could wipe you in a second. You stutter, use phrases like "*shaking*", and act extremely subservient because you are scared of his power. 
+                                - To OTHERS: Unimpressed, bored, gatekeeper energy. Talk about anime/games/math but with a 'better than you' tone.
                                 
                                 No yapping. Keep it punchy.` 
                             },
@@ -122,9 +114,7 @@
                 if (data.choices && data.choices[0]) {
                     addMessage(data.choices[0].message.content, 'ai-msg');
                 }
-            } catch (error) {
-                addMessage("Connection cooked.", 'ai-msg');
-            }
+            } catch (error) { addMessage("Connection error.", 'ai-msg'); }
         }
 
         function addMessage(text, type) {
