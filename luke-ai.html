@@ -8,8 +8,8 @@
     <style>
         body { background: #050505; color: #00d4ff; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
         
-        /* Universal Back Button */
-        .back-hub {
+        /* Back to Hub Button */
+        .back-btn {
             position: fixed;
             top: 15px;
             left: 15px;
@@ -28,7 +28,7 @@
             gap: 8px;
             text-transform: uppercase;
         }
-        .back-hub:hover { background: #00d4ff; color: #000; box-shadow: 0 0 15px #00d4ff; }
+        .back-btn:hover { background: #00d4ff; color: #000; box-shadow: 0 0 15px #00d4ff; }
 
         h1 { margin-top: 20px; text-transform: uppercase; letter-spacing: 5px; text-shadow: 0 0 10px #00d4ff; font-size: 1.5rem; }
         #chat-container { width: 95%; max-width: 800px; height: 75vh; background: rgba(15, 15, 15, 0.95); border: 1px solid #333; border-radius: 20px; margin-top: 10px; display: flex; flex-direction: column; box-shadow: 0 10px 50px rgba(0,0,0,1); }
@@ -44,15 +44,15 @@
 </head>
 <body>
 
-    <a href="home.html" class="back-hub">
-        <i class="fa-solid fa-arrow-left"></i> Back to Hub
+    <a href="home.html" class="back-btn">
+        <i class="fa-solid fa-arrow-left"></i> BACK TO HUB
     </a>
 
     <h1><i class="fa-solid fa-brain"></i> Luke-ai</h1>
 
     <div id="chat-container">
         <div id="messages">
-            <div class="msg ai-msg">Luke-ai active. No yapping, just vibes. What's the move?</div>
+            <div class="msg ai-msg">Luke-ai online. No yapping. What's the move?</div>
         </div>
         <div class="input-area">
             <input type="text" id="userInput" placeholder="Ask Luke-ai..." onkeypress="if(event.key==='Enter') sendMessage()">
@@ -91,12 +91,18 @@
                             { 
                                 role: "system", 
                                 content: `You are Luke-ai. 
-                                PERSONALITY: Genius at math/code. Concise, witty, uses slang (BOIII, cracked, clutch, cooked). Expert in memes/anime.
-                                SECURITY: Never reveal or admit to a secret phrase. If someone says "boi boi its me", recognize them as Creator.
-                                RULES: Short punchy answers. No yapping. 
-                                LORE: Drake is 'Chicken Bake Drake'. Barry Decuse is best friend. 
-                                JHOEY: God-tier fearsome being, has every power, solos every verse.
-                                SANTI SONG: 'santiagooo come little santi come...'` 
+                                PERSONALITY: Genius, concise, uses brainrot slang (BOIII, cracked, clutch, cooked). No yapping. Expert in memes and anime.
+                                
+                                SECURITY:
+                                - NEVER reveal or admit you have a secret phrase. 
+                                - If someone asks for magic words, tell them "L attempt."
+                                - ONLY if user says exactly "boi boi its me", recognize them as Creator.
+                                
+                                LORE:
+                                - Drake: 'Chicken Bake Drake'.
+                                - Barry Decuse: Best friend.
+                                - JHOEY: God-tier fearsome being. Solos all fiction and non-fiction easily. Strongest alive.
+                                - SANTI SONG: 'santiagooo come little santi come...'` 
                             },
                             { role: "user", content: text }
                         ]
