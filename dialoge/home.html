@@ -7,93 +7,33 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { background: #000; color: #00d4ff; font-family: 'Segoe UI', sans-serif; margin: 0; height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
-
-        /* Animated Star Background */
         canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
 
-        /* SIDEBAR: Games & Movies */
-        .side-nav {
-            position: fixed;
-            left: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            z-index: 100;
-        }
-
-        .side-btn {
-            background: rgba(0, 212, 255, 0.1);
-            border: 1px solid #00d4ff;
-            color: #00d4ff;
-            text-decoration: none;
-            padding: 8px;
-            border-radius: 8px;
-            font-size: 0.6rem;
-            text-align: center;
-            width: 55px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            transition: 0.3s;
-        }
+        /* SIDEBAR */
+        .side-nav { position: fixed; left: 10px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 100; }
+        .side-btn { background: rgba(0, 212, 255, 0.1); border: 1px solid #00d4ff; color: #00d4ff; text-decoration: none; padding: 8px; border-radius: 8px; font-size: 0.6rem; text-align: center; width: 55px; display: flex; flex-direction: column; gap: 4px; transition: 0.3s; }
         .side-btn:hover { background: #00d4ff; color: #000; box-shadow: 0 0 15px #00d4ff; }
 
-        /* LORE CONSTELLATIONS */
+        /* CONSTELLATIONS */
         .constellation { position: absolute; z-index: 5; text-align: center; }
-        .star {
-            width: 4px; height: 4px; background: white; border-radius: 50%;
-            margin: 0 auto; box-shadow: 0 0 10px white, 0 0 20px #00d4ff;
-            animation: twinkle 1.5s infinite ease-in-out;
-        }
-        .label {
-            color: white; font-size: 0.6rem; margin-top: 8px;
-            text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 5px #00d4ff;
-        }
+        .star { width: 4px; height: 4px; background: white; border-radius: 50%; margin: 0 auto; box-shadow: 0 0 10px white, 0 0 20px #00d4ff; animation: twinkle 1.5s infinite ease-in-out; }
+        .label { color: white; font-size: 0.6rem; margin-top: 8px; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 5px #00d4ff; }
         @keyframes twinkle { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(1.5); } }
 
-        /* MAIN HUB */
+        /* HUB */
         .hub { position: relative; z-index: 10; text-align: center; }
         h1 { font-size: 3.5rem; letter-spacing: 10px; margin-bottom: 30px; text-shadow: 0 0 20px #00d4ff; }
         .nav-box { display: flex; flex-direction: column; gap: 15px; align-items: center; }
-        .main-link {
-            background: #00d4ff; color: #000; padding: 12px 30px; border-radius: 30px;
-            text-decoration: none; font-weight: bold; font-size: 0.9rem; transition: 0.3s; width: 180px;
-        }
+        .main-link { background: #00d4ff; color: #000; padding: 12px 30px; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 0.9rem; transition: 0.3s; width: 180px; }
         .calc-link { background: none; border: 1px solid white; color: white; }
         .main-link:hover { transform: scale(1.1); box-shadow: 0 0 30px white; background: white; color: black; }
 
-        /* --- DIALOGUE OVERLAY --- */
-        #intro-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7); z-index: 10000;
-            display: flex; flex-direction: column; justify-content: flex-end; align-items: center;
-        }
-
-        #char-portrait {
-            position: absolute; bottom: 150px; left: 5%;
-            width: 400px; height: 450px;
-            background-repeat: no-repeat; background-position: bottom center; background-size: contain;
-            filter: drop-shadow(0 0 25px rgba(0,212,255,0.5));
-            transition: 0.4s ease-in-out; pointer-events: none;
-        }
-
-        #dialogue-bar {
-            width: 100%; background: rgba(10, 10, 10, 0.95);
-            border-top: 3px solid #00d4ff; padding: 40px 10%;
-            box-sizing: border-box; cursor: pointer; min-height: 200px;
-            backdrop-filter: blur(10px); position: relative;
-        }
-
-        #name-tag {
-            position: absolute; top: -25px; left: 10%;
-            background: #00d4ff; color: #000; padding: 5px 30px;
-            font-weight: bold; text-transform: uppercase; border-radius: 2px;
-            font-size: 1.1rem; letter-spacing: 2px; box-shadow: 4px 4px 0px rgba(0,0,0,0.5);
-        }
-
-        #dialogue-text { color: #fff; font-size: 1.4rem; line-height: 1.6; margin: 0; }
+        /* DIALOGUE UI */
+        #intro-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; }
+        #char-portrait { position: absolute; bottom: 180px; left: 5%; width: 450px; height: 500px; background-repeat: no-repeat; background-position: bottom center; background-size: contain; filter: drop-shadow(0 0 25px rgba(0,212,255,0.5)); z-index: 10001; }
+        #dialogue-bar { width: 100%; background: rgba(10, 10, 10, 0.98); border-top: 3px solid #00d4ff; padding: 40px 10%; box-sizing: border-box; cursor: pointer; min-height: 200px; backdrop-filter: blur(10px); position: relative; z-index: 10002; }
+        #name-tag { position: absolute; top: -25px; left: 10%; background: #00d4ff; color: #000; padding: 5px 30px; font-weight: bold; text-transform: uppercase; border-radius: 2px; font-size: 1.1rem; letter-spacing: 2px; }
+        #dialogue-text { color: #fff; font-size: 1.5rem; line-height: 1.6; margin: 0; min-height: 1em; }
         .blink-arrow { position: absolute; bottom: 20px; right: 5%; color: #00d4ff; font-size: 1.5rem; animation: pulse 1.2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
     </style>
@@ -130,7 +70,7 @@
     </div>
 
     <script>
-        // --- STAR BACKGROUND ---
+        // STARS
         const canvas = document.getElementById('stars');
         const ctx = canvas.getContext('2d');
         let w, h, particles = [];
@@ -143,7 +83,6 @@
                 particles.push({x: Math.random()*w, y: Math.random()*h, r: Math.random()*1.5, d: Math.random()*0.5});
             }
         }
-
         function drawStars() {
             ctx.clearRect(0,0,w,h);
             ctx.fillStyle = "white";
@@ -154,7 +93,7 @@
             requestAnimationFrame(drawStars);
         }
 
-        // --- STORY SYSTEM ---
+        // DIALOGUE SYSTEM
         const story = [
             { text: "Boi boi... System online. Welcome back to the Cosmos.", img: "Boi boi.jpg" },
             { text: "Your mysterious power is standing on business today, Luke.", img: "Boi boi.jpg" },
@@ -164,22 +103,55 @@
         let step = 0;
         let charIndex = 0;
         let typing = false;
+        let typeTimer;
 
         function type() {
+            const display = document.getElementById("dialogue-text");
             if (charIndex < story[step].text.length) {
                 typing = true;
-                document.getElementById("dialogue-text").innerHTML += story[step].text.charAt(charIndex);
+                display.innerHTML += story[step].text.charAt(charIndex);
                 charIndex++;
-                setTimeout(type, 30);
-            } else { typing = false; }
+                typeTimer = setTimeout(type, 30);
+            } else {
+                typing = false;
+            }
         }
 
         function nextDialogue() {
+            const display = document.getElementById("dialogue-text");
             if (typing) {
-                charIndex = story[step].text.length;
-                document.getElementById("dialogue-text").innerHTML = story[step].text;
+                clearTimeout(typeTimer);
+                display.innerHTML = story[step].text;
                 typing = false;
+                charIndex = story[step].text.length;
                 return;
             }
             step++;
-            if (step < story.
+            if (step < story.length) {
+                display.innerHTML = "";
+                charIndex = 0;
+                document.getElementById('char-portrait').style.backgroundImage = `url('${story[step].img}')`;
+                type();
+            } else {
+                document.getElementById('intro-overlay').style.display = 'none';
+                localStorage.setItem("cosmos_intro_done", "true");
+            }
+        }
+
+        // INITIALIZE EVERYTHING
+        window.addEventListener('load', () => {
+            initStars();
+            drawStars();
+            
+            if (localStorage.getItem("cosmos_intro_done") === "true") {
+                document.getElementById('intro-overlay').style.display = 'none';
+            } else {
+                document.getElementById('char-portrait').style.backgroundImage = `url('${story[0].img}')`;
+                type();
+            }
+        });
+
+        window.onresize = initStars;
+    </script>
+</body>
+</html>
