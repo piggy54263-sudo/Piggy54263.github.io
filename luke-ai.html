@@ -6,177 +6,221 @@
     <title>Luke-ai</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background: #050505; color: #00d4ff; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
+        body { background: #050505; color: #00d4ff; font-family: 'Segoe UI', sans-serif; display: flex; height: 100vh; margin: 0; overflow: hidden; }
         
-        .back-btn {
-            position: fixed; top: 15px; left: 15px;
-            background: rgba(0, 0, 0, 0.8); border: 1px solid #00d4ff; color: #00d4ff;
-            text-decoration: none; padding: 8px 15px; border-radius: 8px;
-            font-size: 0.7rem; font-weight: bold; z-index: 9999;
-            transition: 0.3s; display: flex; align-items: center; gap: 8px; text-transform: uppercase;
-        }
+        /* Sidebar Styles */
+        #sidebar { width: 260px; background: #0a0a0a; border-right: 1px solid #222; display: flex; flex-direction: column; padding: 15px; }
+        .sidebar-item { padding: 10px; margin-bottom: 5px; border-radius: 8px; cursor: pointer; transition: 0.3s; font-size: 0.9rem; color: #ccc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border: 1px solid transparent; }
+        .sidebar-item:hover { background: #1a1a1a; border-color: #00d4ff; color: #fff; }
+        .sidebar-header { font-weight: bold; color: #00d4ff; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; font-size: 0.8rem; }
+        
+        /* Main Chat Area */
+        #main-content { flex-grow: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
+        .back-btn { position: absolute; top: 15px; left: 15px; background: rgba(0, 0, 0, 0.8); border: 1px solid #00d4ff; color: #00d4ff; text-decoration: none; padding: 8px 15px; border-radius: 8px; font-size: 0.7rem; font-weight: bold; z-index: 9999; transition: 0.3s; display: flex; align-items: center; gap: 8px; text-transform: uppercase; }
         .back-btn:hover { background: #00d4ff; color: #000; box-shadow: 0 0 15px #00d4ff; }
 
         h1 { margin-top: 20px; text-transform: uppercase; letter-spacing: 5px; text-shadow: 0 0 10px #00d4ff; font-size: 1.5rem; }
-        #chat-container { width: 95%; max-width: 800px; height: 75vh; background: rgba(15, 15, 15, 0.95); border: 1px solid #333; border-radius: 20px; margin-top: 10px; display: flex; flex-direction: column; box-shadow: 0 10px 50px rgba(0,0,0,1); }
+        #chat-container { width: 95%; max-width: 800px; height: 70vh; background: rgba(15, 15, 15, 0.95); border: 1px solid #333; border-radius: 20px; margin-top: 10px; display: flex; flex-direction: column; box-shadow: 0 10px 50px rgba(0,0,0,1); }
         #messages { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
         .msg { max-width: 80%; padding: 14px 18px; border-radius: 18px; line-height: 1.5; font-size: 0.95rem; word-wrap: break-word; }
         .user-msg { align-self: flex-end; background: #00d4ff; color: #000; font-weight: 600; border-bottom-right-radius: 2px; }
         .ai-msg { align-self: flex-start; background: #1a1a1a; color: #fff; border: 1px solid #00d4ff; border-bottom-left-radius: 2px; }
-        .input-area { display: flex; padding: 20px; background: #0a0a0a; gap: 12px; border-top: 1px solid #222; }
-        
-        input { flex-grow: 1; background: #111; border: 1px solid #333; color: white; padding: 15px; border-radius: 12px; outline: none; }
+        .msg img { max-width: 100%; border-radius: 10px; margin-top: 10px; border: 1px solid #00d4ff; }
+
+        /* Input Controls */
+        .input-area { display: flex; padding: 20px; background: #0a0a0a; gap: 12px; border-top: 1px solid #222; align-items: center; }
+        .controls { display: flex; gap: 10px; margin-bottom: 10px; width: 95%; max-width: 800px; }
+        input[type="text"] { flex-grow: 1; background: #111; border: 1px solid #333; color: white; padding: 12px; border-radius: 12px; outline: none; }
         input:focus { border-color: #00d4ff; }
         
-        button { background: #00d4ff; border: none; padding: 0 25px; border-radius: 12px; color: #000; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        button:hover { transform: scale(1.05); background: #fff; }
+        button { background: #111; border: 1px solid #333; padding: 10px 15px; border-radius: 10px; color: #00d4ff; cursor: pointer; transition: 0.3s; font-size: 0.8rem; }
+        button:hover { background: #00d4ff; color: #000; }
+        #sendBtn { background: #00d4ff; color: #000; font-weight: bold; border: none; }
+        
+        #fileInput { display: none; }
+        .upload-label { cursor: pointer; color: #00d4ff; font-size: 1.2rem; margin-right: 5px; }
     </style>
 </head>
 <body>
 
-    <a href="home.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> BACK TO HUB</a>
+    <div id="sidebar">
+        <div class="sidebar-header">Chat History</div>
+        <button onclick="newChat()"><i class="fa-solid fa-plus"></i> New Chat</button>
+        <div id="history-list" style="flex-grow: 1; overflow-y: auto; margin-top: 15px;"></div>
+        <button onclick="clearAllHistory()" style="color: #ff4444; border-color: #442222;"><i class="fa-solid fa-trash"></i> Clear All</button>
+    </div>
 
-    <h1><i class="fa-solid fa-brain"></i> Luke-ai</h1>
+    <div id="main-content">
+        <a href="home.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> HUB</a>
+        <h1><i class="fa-solid fa-brain"></i> Luke-ai</h1>
 
-    <div id="chat-container">
-        <div id="messages">
-            <div class="msg ai-msg" id="intro-msg">Luke-ai online. Awaiting identification.</div>
+        <div class="controls">
+            <button onclick="manualSave()"><i class="fa-solid fa-floppy-disk"></i> Save Chat</button>
+            <button id="toggleAutoSave" onclick="toggleAutoSave()">Auto-Save: ON</button>
         </div>
-        <div class="input-area">
-            <input type="text" id="userInput" placeholder="Ask anything (Math, Science, Sports, Lore)..." onkeydown="if(event.key==='Enter') sendMessage()">
-            <button id="sendBtn" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+
+        <div id="chat-container">
+            <div id="messages">
+                <div class="msg ai-msg" id="intro-msg">Luke-ai online. Awaiting identification.</div>
+            </div>
+            <div class="input-area">
+                <input type="file" id="fileInput" accept="image/*" onchange="handleFileUpload()">
+                <label for="fileInput" class="upload-label"><i class="fa-solid fa-paperclip"></i></label>
+                <input type="text" id="userInput" placeholder="Ask Luke-ai..." onkeydown="if(event.key==='Enter') sendMessage()">
+                <button id="sendBtn" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
         </div>
     </div>
 
     <script>
         let GROQ_KEY = ""; 
         let userStatus = localStorage.getItem("luke_user_status") || "unknown"; 
-        // This array keeps track of the current conversation history
         let chatHistory = [];
+        let autoSave = true;
+        let currentChatId = null;
 
         window.onload = () => {
+            loadSidebar();
             const intro = document.getElementById('intro-msg');
-            if (userStatus === "luke") {
-                intro.innerText = "Welcome back, Luke. I'm ready for the grind. Standing on business, BOIII.";
-            } else if (userStatus === "jhoey") {
-                intro.innerText = "Greetings, Jhoey. Systems active. Your deletion power is felt. How can I help today?";
-            } else if (userStatus === "barry") {
-                intro.innerText = "Barry, the Pavilion Legend. Respect to the bounce. Need sports tips or homework help?";
-            } else if (userStatus === "random") {
-                intro.innerText = "Guest detected. Access granted. How can I help you today?";
-            }
+            if (userStatus === "luke") intro.innerText = "Welcome back, Luke. Standing on business, BOIII.";
+            else if (userStatus === "jhoey") intro.innerText = "Greetings, Jhoey. Systems active.";
+            else if (userStatus === "barry") intro.innerText = "Barry, Pavilion Legend. Respect the bounce.";
+            else if (userStatus === "random") intro.innerText = "Guest detected. Access granted.";
         };
+
+        function toggleAutoSave() {
+            autoSave = !autoSave;
+            document.getElementById('toggleAutoSave').innerText = `Auto-Save: ${autoSave ? 'ON' : 'OFF'}`;
+        }
+
+        async function handleFileUpload() {
+            const file = document.getElementById('fileInput').files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64Image = e.target.result;
+                addMessage("", "user-msg", base64Image);
+                // In vision models, we'd send the base64, but for this logic we store the intent
+                chatHistory.push({ role: "user", content: [
+                    { type: "text", text: "[Sent an Image]" },
+                    { type: "image_url", image_url: { url: base64Image } }
+                ]});
+                if(autoSave) manualSave();
+            };
+            reader.readAsDataURL(file);
+        }
 
         async function sendMessage() {
             const input = document.getElementById('userInput');
             const text = input.value.trim();
             if (!text) return;
-
             input.value = '';
 
             if (!GROQ_KEY) {
                 GROQ_KEY = prompt("Enter Groq API Key:");
-                if (!GROQ_KEY) {
-                    addMessage("Error: Access Denied. Identification Key required.", "ai-msg");
-                    return;
-                }
+                if (!GROQ_KEY) return;
             }
 
-            // Secret Recognition Phrases
-            if (text === "boi boi its me") {
-                userStatus = "luke";
-                localStorage.setItem("luke_user_status", "luke");
-                addMessage(text, 'user-msg');
-                addMessage("Verification cleared. Luke, the Supreme Creator. Chat history logic initialized.", 'ai-msg');
-                return;
-            }
-            if (text === "boi its me") {
-                userStatus = "jhoey";
-                localStorage.setItem("luke_user_status", "jhoey");
-                addMessage(text, 'user-msg');
-                addMessage("Identity confirmed. Respect, Jhoey. Your power is recognized.", 'ai-msg');
-                return;
-            }
-            if (text === "boi boi boi its me") {
-                userStatus = "barry";
-                localStorage.setItem("luke_user_status", "barry");
-                addMessage(text, 'user-msg');
-                addMessage("Barry! The King of the Bounce. I'll remember our conversation as long as this tab is open.", 'ai-msg');
-                return;
-            }
-            if (text === "RANDOM") {
-                userStatus = "random";
-                localStorage.setItem("luke_user_status", "random");
-                addMessage(text, 'user-msg');
-                addMessage("Identification: RANDOM. Guest access active.", 'ai-msg');
-                return;
-            }
+            // Status overrides
+            if (text === "boi boi its me") { userStatus = "luke"; localStorage.setItem("luke_user_status", "luke"); location.reload(); return; }
+            if (text === "RANDOM") { userStatus = "random"; localStorage.setItem("luke_user_status", "random"); location.reload(); return; }
 
             addMessage(text, 'user-msg');
-            
-            // Add user message to history
             chatHistory.push({ role: "user", content: text });
 
             try {
-                // Construct messages array with system prompt + current history
-                const systemPrompt = { 
-                    role: "system", 
-                    content: `You are Luke-ai. Identification: ${userStatus}.
-                    
-                    CAPABILITIES:
-                    - EXPERT TUTOR: Solve math (1st-12th grade), science, and reading. IMPORTANT: For complex math, show your work step-by-step.
-                    - SPORTS COACH: Tips for sports, focus on clutch plays.
-                    - ADVISOR: Give life advice and helpful tips.
-                    - MEMORY: You remember everything said in this specific conversation.
-
-                    LORE CONSTRAINTS: 
-                    - Only discuss "Friends Lore" if explicitly asked.
-                    - Acknowledge rank/powers for Luke, Jhoey, and Barry.
-                    
-                    THE HIERARCHY:
-                    1. LUKE (THE SUPREME CREATOR): Absolute peak. 
-                    2. JHOEY: God-tier. Instant delete ability (0.0001s speed).
-                    3. BARRY: Pavilion Legend. King of the Bounce.
-                    
-                    STYLE: Friendly, high energy, brainrot slang (BOIII, cracked, clutch, standing on business). No yapping.` 
-                };
-
                 const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                     method: "POST",
-                    headers: { 
-                        "Authorization": `Bearer ${GROQ_KEY}`, 
-                        "Content-Type": "application/json" 
-                    },
+                    headers: { "Authorization": `Bearer ${GROQ_KEY}`, "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        model: "llama-3.3-70b-versatile",
-                        messages: [systemPrompt, ...chatHistory]
+                        model: "llama-3.2-11b-vision-preview", // Vision capable
+                        messages: [{ role: "system", content: `You are Luke-ai. Status: ${userStatus}. Use slang (BOIII, cracked, business). You can see images.` }, ...chatHistory]
                     })
                 });
-
                 const data = await response.json();
-
-                if (data.choices && data.choices[0]) {
-                    const aiResponse = data.choices[0].message.content;
-                    addMessage(aiResponse, 'ai-msg');
-                    // Add AI response to history so it remembers its own words
-                    chatHistory.push({ role: "assistant", content: aiResponse });
-                } else {
-                    GROQ_KEY = ""; 
-                    addMessage("Transmission failed. Key likely invalid.", "ai-msg");
-                }
-            } catch (error) {
-                GROQ_KEY = ""; 
-                addMessage("Connection dropped. Verify your key.", 'ai-msg');
+                const aiResponse = data.choices[0].message.content;
+                addMessage(aiResponse, 'ai-msg');
+                chatHistory.push({ role: "assistant", content: aiResponse });
+                
+                if (autoSave) manualSave();
+            } catch (e) {
+                addMessage("Connection dropped. Verify key.", 'ai-msg');
             }
         }
 
-        function addMessage(text, type) {
+        function addMessage(text, type, imgSrc = null) {
             const chatBox = document.getElementById('messages');
             const div = document.createElement('div');
             div.className = `msg ${type}`;
             div.innerText = text;
+            if (imgSrc) {
+                const img = document.createElement('img');
+                img.src = imgSrc;
+                div.appendChild(img);
+            }
             chatBox.appendChild(div);
             chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // Saving and History Logic
+        function manualSave() {
+            if (chatHistory.length === 0) return;
+            let savedChats = JSON.parse(localStorage.getItem('luke_saved_chats') || '[]');
+            if (!currentChatId) {
+                currentChatId = Date.now();
+                const title = chatHistory[0].content.toString().substring(0, 25) || "New Chat";
+                savedChats.push({ id: currentChatId, title: title, history: chatHistory });
+            } else {
+                const index = savedChats.findIndex(c => c.id === currentChatId);
+                savedChats[index].history = chatHistory;
+            }
+            localStorage.setItem('luke_saved_chats', JSON.stringify(savedChats));
+            loadSidebar();
+        }
+
+        function loadSidebar() {
+            const list = document.getElementById('history-list');
+            list.innerHTML = '';
+            let savedChats = JSON.parse(localStorage.getItem('luke_saved_chats') || '[]');
+            savedChats.reverse().forEach(chat => {
+                const item = document.createElement('div');
+                item.className = 'sidebar-item';
+                item.innerHTML = `<i class="fa-regular fa-message"></i> ${chat.title}`;
+                item.onclick = () => loadChat(chat.id);
+                list.appendChild(item);
+            });
+        }
+
+        function loadChat(id) {
+            let savedChats = JSON.parse(localStorage.getItem('luke_saved_chats') || '[]');
+            const chat = savedChats.find(c => c.id === id);
+            if (chat) {
+                currentChatId = chat.id;
+                chatHistory = chat.history;
+                const chatBox = document.getElementById('messages');
+                chatBox.innerHTML = '';
+                chatHistory.forEach(msg => {
+                    if (Array.isArray(msg.content)) {
+                        addMessage(msg.content[0].text, msg.role === 'user' ? 'user-msg' : 'ai-msg', msg.content[1]?.image_url?.url);
+                    } else {
+                        addMessage(msg.content, msg.role === 'user' ? 'user-msg' : 'ai-msg');
+                    }
+                });
+            }
+        }
+
+        function newChat() {
+            currentChatId = null;
+            chatHistory = [];
+            document.getElementById('messages').innerHTML = '<div class="msg ai-msg">New session started. Standing on business.</div>';
+        }
+
+        function clearAllHistory() {
+            if (confirm("Delete all saved chats?")) {
+                localStorage.removeItem('luke_saved_chats');
+                newChat();
+                loadSidebar();
+            }
         }
     </script>
 </body>
