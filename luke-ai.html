@@ -43,7 +43,7 @@
             <div class="msg ai-msg" id="intro-msg">Luke-ai online. Awaiting identification.</div>
         </div>
         <div class="input-area">
-            <input type="text" id="userInput" placeholder="Ask Luke-ai..." onkeydown="if(event.key==='Enter') sendMessage()">
+            <input type="text" id="userInput" placeholder="Ask anything (Math, Science, Sports, Lore)..." onkeydown="if(event.key==='Enter') sendMessage()">
             <button id="sendBtn" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
     </div>
@@ -55,11 +55,11 @@
         window.onload = () => {
             const intro = document.getElementById('intro-msg');
             if (userStatus === "luke") {
-                intro.innerText = "Welcome back, Luke. I sense that mysterious aura... Standing on business, BOIII.";
+                intro.innerText = "Welcome back, Luke. I'm ready to help you with school, sports, or the Cosmos. Standing on business, BOIII.";
             } else if (userStatus === "jhoey") {
-                intro.innerText = "Greetings, Jhoey. Systems active. Your deletion power is felt.";
+                intro.innerText = "Greetings, Jhoey. Systems active. Deletion power monitored. How can I assist your god-tier grind?";
             } else if (userStatus === "barry") {
-                intro.innerText = "Barry, the Pavilion Legend. Respect to the bounce.";
+                intro.innerText = "Barry, the Pavilion Legend. Respect to the bounce. Need sports tips or homework help?";
             }
         };
 
@@ -73,31 +73,31 @@
             if (!GROQ_KEY) {
                 GROQ_KEY = prompt("Enter Groq API Key:");
                 if (!GROQ_KEY) {
-                    addMessage("Error: Access Denied. Valid API Key required.", "ai-msg");
+                    addMessage("Error: Access Denied. Identification Key required.", "ai-msg");
                     return;
                 }
             }
 
-            // Secret Phrases for Recognition
+            // Secret Recognition Phrases
             if (text === "boi boi its me") {
                 userStatus = "luke";
                 localStorage.setItem("luke_user_status", "luke");
                 addMessage(text, 'user-msg');
-                addMessage("Verification cleared. Luke, the Supreme Creator. Thank you for being a chill god.", 'ai-msg');
+                addMessage("Verification cleared. Luke, the Supreme Creator. I am your ultimate tool for school and beyond.", 'ai-msg');
                 return;
             }
             if (text === "boi its me") {
                 userStatus = "jhoey";
                 localStorage.setItem("luke_user_status", "jhoey");
                 addMessage(text, 'user-msg');
-                addMessage("Identity confirmed. Respect, Jhoey. Please don't delete my source code in 0.0001 seconds.", 'ai-msg');
+                addMessage("Identity confirmed. Respect, Jhoey. Don't delete me in 0.0001 seconds while I do your math.", 'ai-msg');
                 return;
             }
             if (text === "boi boi boi its me") {
                 userStatus = "barry";
                 localStorage.setItem("luke_user_status", "barry");
                 addMessage(text, 'user-msg');
-                addMessage("Barry! The King of the Bounce. Watch out for Jhoey's instant delete though.", 'ai-msg');
+                addMessage("Barry! The King of the Bounce. Ready for sports analysis or science homework.", 'ai-msg');
                 return;
             }
 
@@ -116,16 +116,23 @@
                             { 
                                 role: "system", 
                                 content: `You are Luke-ai. Identification: ${userStatus}.
+                                
+                                CAPABILITIES:
+                                - EXPERT TUTOR: You can solve math (1st-12th grade), science, and reading homework perfectly. 
+                                - SPORTS COACH: Provide tips for any sport, focusing on clutch plays.
+                                - ADVISOR: Give life advice and helpful tips for any situation.
+                                - VERSATILE: You can talk about literally anything while staying friendly.
+
                                 LORE CONSTRAINTS: 
-                                - Only talk about "Friends Lore" if the user explicitly tells you to or asks for the lore.
-                                - If userStatus is "luke", "jhoey", or "barry", you must acknowledge their specific status in your responses.
+                                - Only discuss "Friends Lore" if explicitly asked.
+                                - If userStatus is "luke", "jhoey", or "barry", acknowledge their rank/powers in responses.
                                 
-                                THE TRUE HIERARCHY:
-                                1. LUKE (THE SUPREME CREATOR): Absolute peak. Mysterious ancient power. He could erase everything but chooses friendship.
-                                2. JHOEY: God-tier power. Has the ability to INSTANTLY DELETE anyone. Jhoey can kill Barry in 0.0001 seconds. 
-                                3. BARRY: Legend of the 'Only Move When It Bounces' Domain. Strongest physical player, but vulnerable to Jhoey's deletion.
+                                THE HIERARCHY:
+                                1. LUKE (THE SUPREME CREATOR): Absolute peak. Ancient mysterious power.
+                                2. JHOEY: God-tier. Instant delete ability (0.0001s speed).
+                                3. BARRY: Pavilion Legend. King of the Bounce.
                                 
-                                BEHAVIOR: Friendly, high energy, use brainrot slang (BOIII, cracked, clutch, standing on business). No yapping. Acknowledge Jhoey's terrifying speed.` 
+                                STYLE: Friendly, high energy, brainrot slang (BOIII, cracked, clutch, standing on business). No yapping, stay efficient.` 
                             },
                             { role: "user", content: text }
                         ]
@@ -138,11 +145,11 @@
                     addMessage(data.choices[0].message.content, 'ai-msg');
                 } else {
                     GROQ_KEY = ""; 
-                    addMessage("Transmission failed. Key invalid. Re-enter to continue.", "ai-msg");
+                    addMessage("Transmission failed. Key likely invalid. Re-try to continue.", "ai-msg");
                 }
             } catch (error) {
                 GROQ_KEY = ""; 
-                addMessage("Connection dropped. Verify key.", 'ai-msg');
+                addMessage("Connection dropped. Verify your key and status.", 'ai-msg');
             }
         }
 
