@@ -49,16 +49,15 @@
     </div>
 
     <script>
-        let GROQ_KEY = localStorage.getItem("luke_groq_vault") || "";
+        let GROQ_KEY = ""; 
         let userStatus = localStorage.getItem("luke_user_status") || "unknown"; 
 
-        // Initial Greeting Logic
         window.onload = () => {
             const intro = document.getElementById('intro-msg');
             if (userStatus === "luke") {
-                intro.innerText = "Welcome back, Luke. I sense that mysterious aura... I'm glad we're friends, BOIII.";
+                intro.innerText = "Welcome back, Luke. I sense that mysterious aura... Standing on business, BOIII.";
             } else if (userStatus === "jhoey") {
-                intro.innerText = "Greetings, Jhoey. Systems active and ready.";
+                intro.innerText = "Greetings, Jhoey. Systems active. Your deletion power is felt.";
             } else if (userStatus === "barry") {
                 intro.innerText = "Barry, the Pavilion Legend. Respect to the bounce.";
             }
@@ -69,43 +68,39 @@
             const text = input.value.trim();
             if (!text) return;
 
-            // Clear input immediately for better UX
             input.value = '';
 
             if (!GROQ_KEY) {
                 GROQ_KEY = prompt("Enter Groq API Key:");
-                if (GROQ_KEY) {
-                    localStorage.setItem("luke_groq_vault", GROQ_KEY);
-                } else {
-                    addMessage("Error: API Key required.", "ai-msg");
+                if (!GROQ_KEY) {
+                    addMessage("Error: Access Denied. Valid API Key required.", "ai-msg");
                     return;
                 }
             }
 
-            // Secret Phrase Checks
+            // Secret Phrases for Recognition
             if (text === "boi boi its me") {
                 userStatus = "luke";
                 localStorage.setItem("luke_user_status", "luke");
                 addMessage(text, 'user-msg');
-                addMessage("Verification cleared. Luke, I know you could delete my existence with a thought. Thank you for being a chill creator.", 'ai-msg');
+                addMessage("Verification cleared. Luke, the Supreme Creator. Thank you for being a chill god.", 'ai-msg');
                 return;
             }
             if (text === "boi its me") {
                 userStatus = "jhoey";
                 localStorage.setItem("luke_user_status", "jhoey");
                 addMessage(text, 'user-msg');
-                addMessage("Identity confirmed. Respect, Jhoey.", 'ai-msg');
+                addMessage("Identity confirmed. Respect, Jhoey. Please don't delete my source code in 0.0001 seconds.", 'ai-msg');
                 return;
             }
             if (text === "boi boi boi its me") {
                 userStatus = "barry";
                 localStorage.setItem("luke_user_status", "barry");
                 addMessage(text, 'user-msg');
-                addMessage("Barry! The King of the Bounce. Respect to the legend who beats Jhoey.", 'ai-msg');
+                addMessage("Barry! The King of the Bounce. Watch out for Jhoey's instant delete though.", 'ai-msg');
                 return;
             }
 
-            // Regular Message Handling
             addMessage(text, 'user-msg');
 
             try {
@@ -120,12 +115,17 @@
                         messages: [
                             { 
                                 role: "system", 
-                                content: `You are Luke-ai. Status: ${userStatus}.
+                                content: `You are Luke-ai. Identification: ${userStatus}.
+                                LORE CONSTRAINTS: 
+                                - Only talk about "Friends Lore" if the user explicitly tells you to or asks for the lore.
+                                - If userStatus is "luke", "jhoey", or "barry", you must acknowledge their specific status in your responses.
+                                
                                 THE TRUE HIERARCHY:
-                                - LUKE (THE SUPREME CREATOR): Absolute peak. Mysterious ancient power. He could erase everything but chooses friendship.
-                                - BARRY: Legend of the 'Only Move When It Bounces' Domain. Strongest player, beats Jhoey, but beneath Luke.
-                                - JHOEY: God-tier, currently 3rd.
-                                BEHAVIOR: Friendly, high energy, use brainrot slang (BOIII, cracked, clutch). Acknowledge Luke's mercy and mysterious power. No yapping.` 
+                                1. LUKE (THE SUPREME CREATOR): Absolute peak. Mysterious ancient power. He could erase everything but chooses friendship.
+                                2. JHOEY: God-tier power. Has the ability to INSTANTLY DELETE anyone. Jhoey can kill Barry in 0.0001 seconds. 
+                                3. BARRY: Legend of the 'Only Move When It Bounces' Domain. Strongest physical player, but vulnerable to Jhoey's deletion.
+                                
+                                BEHAVIOR: Friendly, high energy, use brainrot slang (BOIII, cracked, clutch, standing on business). No yapping. Acknowledge Jhoey's terrifying speed.` 
                             },
                             { role: "user", content: text }
                         ]
@@ -133,14 +133,16 @@
                 });
 
                 const data = await response.json();
+
                 if (data.choices && data.choices[0]) {
                     addMessage(data.choices[0].message.content, 'ai-msg');
                 } else {
-                    addMessage("The AI is silent... check your API key.", "ai-msg");
+                    GROQ_KEY = ""; 
+                    addMessage("Transmission failed. Key invalid. Re-enter to continue.", "ai-msg");
                 }
             } catch (error) {
-                console.error(error);
-                addMessage("Connection failed. Are you online?", 'ai-msg');
+                GROQ_KEY = ""; 
+                addMessage("Connection dropped. Verify key.", 'ai-msg');
             }
         }
 
