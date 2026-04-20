@@ -9,18 +9,18 @@
         body { background: #000; color: #00d4ff; font-family: 'Segoe UI', sans-serif; margin: 0; height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
         canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
 
-        /* SIDEBAR */
+        /* SIDEBAR NAVIGATION */
         .side-nav { position: fixed; left: 10px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 100; }
         .side-btn { background: rgba(0, 212, 255, 0.1); border: 1px solid #00d4ff; color: #00d4ff; text-decoration: none; padding: 8px; border-radius: 8px; font-size: 0.6rem; text-align: center; width: 55px; display: flex; flex-direction: column; gap: 4px; transition: 0.3s; }
         .side-btn:hover { background: #00d4ff; color: #000; box-shadow: 0 0 15px #00d4ff; }
 
         /* CONSTELLATIONS */
         .constellation { position: absolute; z-index: 5; text-align: center; pointer-events: none; }
-        .star { width: 4px; height: 4px; background: white; border-radius: 50%; margin: 0 auto; box-shadow: 0 0 10px white, 0 0 20px #00d4ff; animation: twinkle 1.5s infinite ease-in-out; }
+        .star-dot { width: 4px; height: 4px; background: white; border-radius: 50%; margin: 0 auto; box-shadow: 0 0 10px white, 0 0 20px #00d4ff; animation: twinkle 1.5s infinite ease-in-out; }
         .label { color: white; font-size: 0.6rem; margin-top: 8px; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 5px #00d4ff; }
         @keyframes twinkle { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(1.5); } }
 
-        /* MAIN HUB */
+        /* HUB CONTENT */
         .hub { position: relative; z-index: 10; text-align: center; }
         h1 { font-size: 3.5rem; letter-spacing: 10px; margin-bottom: 30px; text-shadow: 0 0 20px #00d4ff; }
         .nav-box { display: flex; flex-direction: column; gap: 15px; align-items: center; }
@@ -28,13 +28,13 @@
         .calc-link { background: none; border: 1px solid white; color: white; }
         .main-link:hover { transform: scale(1.1); box-shadow: 0 0 30px white; background: white; color: black; }
 
-        /* --- DIALOGUE UI --- */
-        #intro-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; }
-        #char-portrait { position: absolute; bottom: 180px; left: 5%; width: 450px; height: 500px; background-repeat: no-repeat; background-position: bottom center; background-size: contain; filter: drop-shadow(0 0 25px rgba(0,212,255,0.5)); z-index: 10001; }
+        /* --- DIALOGUE OVERLAY --- */
+        #intro-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; }
+        #char-portrait { position: absolute; bottom: 180px; left: 5%; width: 450px; height: 500px; background-repeat: no-repeat; background-position: bottom center; background-size: contain; filter: drop-shadow(0 0 25px rgba(0,212,255,0.5)); z-index: 10001; pointer-events: none; }
         #dialogue-bar { width: 100%; background: rgba(10, 10, 10, 0.98); border-top: 3px solid #00d4ff; padding: 40px 10%; box-sizing: border-box; cursor: pointer; min-height: 200px; backdrop-filter: blur(10px); position: relative; z-index: 10002; }
-        #name-tag { position: absolute; top: -25px; left: 10%; background: #00d4ff; color: #000; padding: 5px 30px; font-weight: bold; text-transform: uppercase; border-radius: 2px; font-size: 1.1rem; letter-spacing: 2px; z-index: 10003; }
-        #dialogue-text { color: #fff; font-size: 1.5rem; line-height: 1.6; margin: 0; min-height: 1.6em; pointer-events: none; }
-        .blink-arrow { position: absolute; bottom: 20px; right: 5%; color: #00d4ff; font-size: 1.5rem; animation: pulse 1.2s infinite; pointer-events: none; }
+        #name-tag { position: absolute; top: -25px; left: 10%; background: #00d4ff; color: #000; padding: 5px 30px; font-weight: bold; text-transform: uppercase; border-radius: 2px; font-size: 1.1rem; letter-spacing: 2px; }
+        #dialogue-text { color: #fff; font-size: 1.5rem; line-height: 1.6; margin: 0; min-height: 1.6em; }
+        .blink-arrow { position: absolute; bottom: 20px; right: 5%; color: #00d4ff; font-size: 1.5rem; animation: pulse 1.2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
     </style>
 </head>
@@ -47,10 +47,10 @@
         <a href="movies.html" class="side-btn"><i class="fa-solid fa-film"></i>MOVIES</a>
     </nav>
 
-    <div class="constellation" style="top: 20%; left: 75%;"><div class="star"></div><div class="label">Chicken Bake's Dipper</div></div>
-    <div class="constellation" style="top: 65%; left: 85%;"><div class="star"></div><div class="label">Barry's Cluster</div></div>
-    <div class="constellation" style="top: 15%; left: 15%;"><div class="star"></div><div class="label">The Jhoey Nebula</div></div>
-    <div class="constellation" style="top: 80%; left: 25%;"><div class="star"></div><div class="label">Santi's North Star</div></div>
+    <div class="constellation" style="top: 20%; left: 75%;"><div class="star-dot"></div><div class="label">Chicken Bake's Dipper</div></div>
+    <div class="constellation" style="top: 65%; left: 85%;"><div class="star-dot"></div><div class="label">Barry's Cluster</div></div>
+    <div class="constellation" style="top: 15%; left: 15%;"><div class="star-dot"></div><div class="label">The Jhoey Nebula</div></div>
+    <div class="constellation" style="top: 80%; left: 25%;"><div class="star-dot"></div><div class="label">Santi's North Star</div></div>
 
     <div class="hub">
         <h1>COSMOS</h1>
@@ -70,7 +70,7 @@
     </div>
 
     <script>
-        // STARS BACKGROUND
+        // STARS ANIMATION
         const canvas = document.getElementById('stars');
         const ctx = canvas.getContext('2d');
         let w, h, particles = [];
@@ -93,7 +93,7 @@
             requestAnimationFrame(drawStars);
         }
 
-        // STORY DATA
+        // STORY CONFIG
         const story = [
             { text: "Boi boi... System online. Welcome back to the Cosmos.", img: "Boi boi.jpg" },
             { text: "Your mysterious power is standing on business today, Luke.", img: "Boi boi.jpg" },
@@ -121,7 +121,8 @@
 
         function nextDialogue() {
             const textBox = document.getElementById("dialogue-text");
-            
+            if (!textBox) return;
+
             if (typing) {
                 clearTimeout(timer);
                 textBox.innerHTML = story[step].text;
@@ -138,28 +139,24 @@
                 typeEffect();
             } else {
                 document.getElementById('intro-overlay').style.display = 'none';
-                localStorage.setItem("cosmos_intro_v2", "true");
+                localStorage.setItem("cosmos_final_seen", "true");
             }
         }
 
-        // STARTUP
-        window.addEventListener('DOMContentLoaded', () => {
+        // STARTUP LOGIC
+        window.onload = () => {
             initStars();
             drawStars();
 
-            // Reset intro for testing if needed: 
-            // localStorage.removeItem("cosmos_intro_v2");
-
-            if (localStorage.getItem("cosmos_intro_v2") === "true") {
+            // Check if user has seen intro
+            if (localStorage.getItem("cosmos_final_seen") === "true") {
                 document.getElementById('intro-overlay').style.display = 'none';
             } else {
-                // Give the browser 100ms to settle before typing
-                setTimeout(() => {
-                    document.getElementById('char-portrait').style.backgroundImage = `url('${story[0].img}')`;
-                    typeEffect();
-                }, 100);
+                // Ensure character image is set and start typing
+                document.getElementById('char-portrait').style.backgroundImage = `url('${story[0].img}')`;
+                setTimeout(typeEffect, 300);
             }
-        });
+        };
 
         window.onresize = initStars;
     </script>
