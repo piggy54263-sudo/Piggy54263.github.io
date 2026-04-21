@@ -133,7 +133,7 @@
                     method: "POST",
                     headers: { "Authorization": `Bearer ${GROQ_KEY}`, "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        model: "llama-3.2-11b-vision-preview", // Vision capable
+                        model: "llama-3.3-70b-versatile", // Vision capable
                         messages: [{ role: "system", content: `You are Luke-ai. Status: ${userStatus}. Use slang (BOIII, cracked, business). You can see images.` }, ...chatHistory]
                     })
                 });
@@ -144,7 +144,7 @@
                 
                 if (autoSave) manualSave();
             } catch (e) {
-                addMessage("Connection dropped. Verify key.", 'ai-msg');
+                addMessage("Bro why you lie'n thats the wrong key BOIII.", 'ai-msg');
             }
         }
 
