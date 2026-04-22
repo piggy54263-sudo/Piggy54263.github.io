@@ -5,82 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pumpkin AI</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
     <style>
         body { 
             background: #050505; color: #ff8800; font-family: 'Segoe UI', sans-serif; 
             margin: 0; height: 100vh; display: flex; flex-direction: column; 
-            align-items: center; justify-content: center;
-            overflow: hidden;
+            align-items: center; justify-content: center; overflow: hidden;
         }
 
-        .back-link { position: fixed; top: 20px; left: 20px; color: #ff8800; text-decoration: none; border: 1px solid #ff8800; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; opacity: 0.6; transition: 0.3s; }
-        .back-link:hover { opacity: 1; box-shadow: 0 0 10px #ff8800; }
+        .back-link { position: fixed; top: 20px; left: 20px; color: #ff8800; text-decoration: none; border: 1px solid #ff8800; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; z-index: 100; }
+
+        /* JJK NAMEPLATE */
+        .name-tag {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 2.5rem;
+            letter-spacing: 5px;
+            color: #fff;
+            text-shadow: 3px 3px 0px #ff0000, -1px -1px 0px #000;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
 
         /* THE PUMPKIN */
         .pumpkin-main {
             width: 160px; height: 140px; background: #d45500; border-radius: 50% 50% 45% 45%;
             position: relative; box-shadow: inset -10px -10px 30px #000, 0 0 40px rgba(255,136,0,0.3);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            animation: hover 4s infinite ease-in-out;
+            animation: hover 3s infinite ease-in-out;
         }
-        
-        /* Spooky Eye Glow */
         .eyes-row { display: flex; gap: 40px; margin-bottom: 10px; }
-        .eye-tri { 
-            width: 30px; height: 30px; background: #111; 
-            clip-path: polygon(50% 0%, 0% 100%, 100% 100%); 
-            transition: 0.3s;
-        }
-        
-        .mouth-carve { 
-            width: 80px; height: 30px; background: #111; 
-            clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 80% 70%, 50% 100%, 20% 70%, 0% 100%); 
-        }
+        .eye-tri { width: 30px; height: 30px; background: #111; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
+        .mouth-carve { width: 80px; height: 30px; background: #111; clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 80% 70%, 50% 100%, 20% 70%, 0% 100%); }
 
-        @keyframes hover { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-15px) rotate(1deg); } }
-        
-        /* Robotic Glitch/Shake */
-        .speaking { animation: glitch 0.15s infinite; }
-        .speaking .eye-tri { background: #ff0000; box-shadow: 0 0 15px #ff0000; }
+        @keyframes hover { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        .speaking { animation: chatter 0.2s infinite; }
+        @keyframes chatter { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
-        @keyframes glitch {
-            0% { transform: translate(1px, 1px) skew(0deg); }
-            20% { transform: translate(-2px, 0px) skew(2deg); filter: hue-rotate(10deg); }
-            40% { transform: translate(2px, -1px) skew(-1deg); }
-            60% { transform: translate(-1px, 1px) rotate(1deg); }
-            80% { transform: translate(1px, -2px) skew(1deg); }
-            100% { transform: translate(0px, 0px) skew(0deg); }
-        }
-
-        /* SUBTITLES BOX */
+        /* SUBTITLES */
         #subs-container {
             margin: 20px 0; min-height: 60px; width: 80%; text-align: center;
-            color: #fff; font-size: 1.2rem; font-style: italic; 
-            text-shadow: 0 0 10px #ff8800, 0 0 20px #ff4400;
-            letter-spacing: 1px;
+            color: #fff; font-size: 1.2rem; text-shadow: 0 0 10px #ff8800;
         }
 
-        /* TEXT INPUT AREA */
-        .input-area { 
-            width: 90%; max-width: 500px; display: flex; gap: 10px; 
-            background: rgba(10, 10, 10, 0.9); padding: 10px; 
-            border-radius: 50px; border: 1px solid #ff8800;
-            box-shadow: 0 0 15px rgba(255, 136, 0, 0.1);
-        }
+        /* INPUT AREA */
+        .input-area { width: 90%; max-width: 500px; display: flex; gap: 10px; background: #111; padding: 10px; border-radius: 50px; border: 2px solid #ff8800; }
         #textInput { background: none; border: none; color: white; flex: 1; padding: 10px; outline: none; font-size: 1rem; }
-        .send-btn { 
-            background: #ff8800; border: none; color: #000; 
-            padding: 10px 20px; border-radius: 50px; cursor: pointer; 
-            font-weight: bold; transition: 0.2s;
-        }
-        .send-btn:hover { background: #fff; transform: scale(1.05); }
-
-        #status { font-size: 0.6rem; margin-top: 10px; letter-spacing: 3px; opacity: 0.4; text-transform: uppercase; color: #ff4400; }
+        .send-btn { background: #ff8800; border: none; color: #000; padding: 10px 20px; border-radius: 50px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <a href="home.html" class="back-link">← TERMINATE SESSION</a>
+    <a href="home.html" class="back-link">← EXIT</a>
+
+    <div class="name-tag">PUMPKIN</div>
 
     <div class="pumpkin-main" id="pumpkinBody">
         <div class="eyes-row">
@@ -93,17 +70,14 @@
     <div id="subs-container"></div>
 
     <div class="input-area">
-        <input type="text" id="textInput" placeholder="Interface with Pumpkin..." autocomplete="off">
+        <input type="text" id="textInput" placeholder="Message Pumpkin..." autocomplete="off">
         <button class="send-btn" onclick="askPumpkin()">SEND</button>
     </div>
-
-    <div id="status">Core Initialized</div>
 
     <script>
         const pumpkin = document.getElementById('pumpkinBody');
         const subs = document.getElementById('subs-container');
         const input = document.getElementById('textInput');
-        
         let KEY = localStorage.getItem("groq_key") || "";
 
         input.addEventListener("keypress", (e) => { if(e.key === "Enter") askPumpkin(); });
@@ -111,10 +85,8 @@
         async function askPumpkin() {
             const query = input.value.trim();
             if(!query) return;
-
             input.value = "";
             subs.innerText = "...";
-            document.getElementById('status').innerText = "Processing Data...";
 
             if(!KEY) {
                 KEY = prompt("Enter Groq Key:");
@@ -127,49 +99,35 @@
                     headers: { "Authorization": `Bearer ${KEY}`, "Content-Type": "application/json" },
                     body: JSON.stringify({
                         model: "llama-3.3-70b-versatile",
-                        messages: [{ 
-                            role: "system", 
-                            content: "You are Pumpkin-ai. You are a haunted cybernetic pumpkin. Your personality is spooky, robotic, and a bit erratic. Use brainrot slang like BOIII and cracked, but mix it with creepy robot glitches. Keep it short." 
-                        }, { role: "user", content: query }]
+                        messages: [{ role: "system", content: "You are Pumpkin. You are a cool, slightly edgy AI. Use slang like BOIII. Keep it short." }, { role: "user", content: query }]
                     })
                 });
-
                 const data = await response.json();
-                const reply = data.choices[0].message.content;
-                speak(reply);
-
-            } catch (err) {
-                subs.innerText = "System Failure, BOIII.";
-            }
+                speak(data.choices[0].message.content);
+            } catch (err) { subs.innerText = "Error connecting, boii."; }
         }
 
         function speak(text) {
             const synth = window.speechSynthesis;
             const utter = new SpeechSynthesisUtterance(text);
-
+            
             utter.onstart = () => {
                 pumpkin.classList.add('speaking');
                 subs.innerText = text;
-                document.getElementById('status').innerText = "Vocalizing...";
             };
+            utter.onend = () => pumpkin.classList.remove('speaking');
 
-            utter.onend = () => {
-                pumpkin.classList.remove('speaking');
-                document.getElementById('status').innerText = "Idle";
-            };
-
-            // Enhanced Spooky Robotic Settings
-            utter.pitch = 0.1; // Extremely deep, rattling sound
-            utter.rate = 0.8;  // Slower, more mechanical pace
-
+            // NORMAL VOICE SETTINGS (Like Rudi)
+            utter.pitch = 1.0; 
+            utter.rate = 1.0;  
+            
             const voices = synth.getVoices();
-            // Look for a voice that sounds more mechanical/serious
-            const spookyVoice = voices.find(v => v.name.includes("Male") || v.name.includes("Microsoft David")) || voices[0];
-            utter.voice = spookyVoice;
+            // Tries to pick a clear male voice
+            const rudiVoice = voices.find(v => v.name.includes("Google US English") || v.name.includes("Male")) || voices[0];
+            utter.voice = rudiVoice;
 
             synth.speak(utter);
         }
-
         window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
     </script>
 </body>
