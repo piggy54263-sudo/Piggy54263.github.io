@@ -13,16 +13,17 @@
             align-items: center; justify-content: center; overflow: hidden;
         }
 
-        .back-link { position: fixed; top: 20px; left: 20px; color: #ff8800; text-decoration: none; border: 1px solid #ff8800; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; z-index: 100; }
+        .back-link { position: fixed; top: 20px; left: 20px; color: #ff8800; text-decoration: none; border: 1px solid #ff8800; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; z-index: 100; transition: 0.3s; }
+        .back-link:hover { background: #ff8800; color: #000; }
 
         /* JJK NAMEPLATE */
         .name-tag {
             font-family: 'Permanent Marker', cursive;
-            font-size: 2.5rem;
-            letter-spacing: 5px;
+            font-size: 3rem;
+            letter-spacing: 4px;
             color: #fff;
-            text-shadow: 3px 3px 0px #ff0000, -1px -1px 0px #000;
-            margin-bottom: 10px;
+            text-shadow: 4px 4px 0px #ff0000, -1px -1px 0px #000;
+            margin-bottom: 20px;
             text-transform: uppercase;
         }
 
@@ -34,23 +35,35 @@
             animation: hover 3s infinite ease-in-out;
         }
         .eyes-row { display: flex; gap: 40px; margin-bottom: 10px; }
-        .eye-tri { width: 30px; height: 30px; background: #111; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
+        .eye-tri { width: 30px; height: 30px; background: #111; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); transition: 0.2s; }
         .mouth-carve { width: 80px; height: 30px; background: #111; clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 80% 70%, 50% 100%, 20% 70%, 0% 100%); }
 
         @keyframes hover { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        
+        /* Talking animation */
         .speaking { animation: chatter 0.2s infinite; }
+        .speaking .eye-tri { background: #ffcc00; box-shadow: 0 0 10px #ffcc00; }
         @keyframes chatter { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
         /* SUBTITLES */
         #subs-container {
             margin: 20px 0; min-height: 60px; width: 80%; text-align: center;
             color: #fff; font-size: 1.2rem; text-shadow: 0 0 10px #ff8800;
+            font-weight: 500;
         }
 
         /* INPUT AREA */
-        .input-area { width: 90%; max-width: 500px; display: flex; gap: 10px; background: #111; padding: 10px; border-radius: 50px; border: 2px solid #ff8800; }
+        .input-area { 
+            width: 90%; max-width: 500px; display: flex; gap: 10px; 
+            background: rgba(20,20,20,0.9); padding: 10px; 
+            border-radius: 50px; border: 2px solid #ff8800; 
+        }
         #textInput { background: none; border: none; color: white; flex: 1; padding: 10px; outline: none; font-size: 1rem; }
-        .send-btn { background: #ff8800; border: none; color: #000; padding: 10px 20px; border-radius: 50px; cursor: pointer; font-weight: bold; }
+        .send-btn { 
+            background: #ff8800; border: none; color: #000; padding: 10px 25px; 
+            border-radius: 50px; cursor: pointer; font-weight: bold; transition: 0.2s;
+        }
+        .send-btn:hover { background: #fff; }
     </style>
 </head>
 <body>
@@ -99,7 +112,10 @@
                     headers: { "Authorization": `Bearer ${KEY}`, "Content-Type": "application/json" },
                     body: JSON.stringify({
                         model: "llama-3.3-70b-versatile",
-                        messages: [{ role: "system", content: "You are Pumpkin. You are a cool, slightly edgy AI. Use slang like BOIII. Keep it short." }, { role: "user", content: query }]
+                        messages: [{ 
+                            role: "system", 
+                            content: "You are Pumpkin. You are a cool, slightly edgy AI friend. Use slang like BOIII and cracked. Keep responses short and direct." 
+                        }, { role: "user", content: query }]
                     })
                 });
                 const data = await response.json();
@@ -115,19 +131,23 @@
                 pumpkin.classList.add('speaking');
                 subs.innerText = text;
             };
-            utter.onend = () => pumpkin.classList.remove('speaking');
+            utter.onend = () => {
+                pumpkin.classList.remove('speaking');
+            };
 
-            // NORMAL VOICE SETTINGS (Like Rudi)
+            // Rudi Style Voice (Clear & Natural)
             utter.pitch = 1.0; 
             utter.rate = 1.0;  
             
             const voices = synth.getVoices();
-            // Tries to pick a clear male voice
-            const rudiVoice = voices.find(v => v.name.includes("Google US English") || v.name.includes("Male")) || voices[0];
-            utter.voice = rudiVoice;
+            // Specifically looks for a high-quality male voice
+            const clearVoice = voices.find(v => v.name.includes("Google US English") || v.name.includes("Male")) || voices[0];
+            utter.voice = clearVoice;
 
             synth.speak(utter);
         }
+
+        // Pre-load voices
         window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
     </script>
 </body>
