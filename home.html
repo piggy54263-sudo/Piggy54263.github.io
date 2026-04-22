@@ -45,6 +45,7 @@
     <nav class="side-nav">
         <a href="games.html" class="side-btn"><i class="fa-solid fa-gamepad"></i>GAMES</a>
         <a href="movies.html" class="side-btn"><i class="fa-solid fa-film"></i>MOVIES</a>
+        <a href="voice.html" class="side-btn"><i class="fa-solid fa-microphone"></i>VOICE</a>
     </nav>
 
     <div class="constellation" style="top: 20%; left: 75%;"><div class="star-dot"></div><div class="label">Chicken Bake's Dipper</div></div>
@@ -155,8 +156,6 @@
         window.addEventListener('load', () => {
             initStars();
             drawStars();
-
-            // To reset for testing: localStorage.removeItem("cosmos_v3_seen");
 
             if (localStorage.getItem("cosmos_v3_seen") === "true") {
                 document.getElementById('intro-overlay').style.display = 'none';
