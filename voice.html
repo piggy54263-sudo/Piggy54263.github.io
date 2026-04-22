@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pumpkin AI</title>
+    <title>Pumpkin AI |</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
     <style>
@@ -13,62 +13,55 @@
             align-items: center; justify-content: center; overflow: hidden;
         }
 
-        .back-link { position: fixed; top: 20px; left: 20px; color: #ff8800; text-decoration: none; border: 1px solid #ff8800; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; z-index: 100; transition: 0.3s; }
-        .back-link:hover { background: #ff8800; color: #000; }
+        .back-link { position: fixed; top: 20px; left: 20px; color: #ff8800; text-decoration: none; border: 1px solid #ff8800; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; z-index: 100; }
 
         /* JJK NAMEPLATE */
         .name-tag {
             font-family: 'Permanent Marker', cursive;
-            font-size: 3rem;
-            letter-spacing: 4px;
+            font-size: 3.5rem;
+            letter-spacing: 6px;
             color: #fff;
-            text-shadow: 4px 4px 0px #ff0000, -1px -1px 0px #000;
-            margin-bottom: 20px;
+            text-shadow: 5px 5px 0px #ff0000, -2px -2px 0px #000;
+            margin-bottom: 25px;
             text-transform: uppercase;
         }
 
         /* THE PUMPKIN */
         .pumpkin-main {
-            width: 160px; height: 140px; background: #d45500; border-radius: 50% 50% 45% 45%;
-            position: relative; box-shadow: inset -10px -10px 30px #000, 0 0 40px rgba(255,136,0,0.3);
+            width: 180px; height: 160px; background: #d45500; border-radius: 50% 50% 45% 45%;
+            position: relative; box-shadow: inset -10px -10px 30px #000, 0 0 40px rgba(255,136,0,0.4);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             animation: hover 3s infinite ease-in-out;
         }
-        .eyes-row { display: flex; gap: 40px; margin-bottom: 10px; }
-        .eye-tri { width: 30px; height: 30px; background: #111; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); transition: 0.2s; }
-        .mouth-carve { width: 80px; height: 30px; background: #111; clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 80% 70%, 50% 100%, 20% 70%, 0% 100%); }
+        .eyes-row { display: flex; gap: 45px; margin-bottom: 15px; }
+        .eye-tri { width: 35px; height: 35px; background: #111; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
+        .mouth-carve { width: 90px; height: 35px; background: #111; clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 80% 70%, 50% 100%, 20% 70%, 0% 100%); }
 
-        @keyframes hover { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        @keyframes hover { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
         
-        /* Talking animation */
-        .speaking { animation: chatter 0.2s infinite; }
-        .speaking .eye-tri { background: #ffcc00; box-shadow: 0 0 10px #ffcc00; }
-        @keyframes chatter { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        .speaking { animation: bounce 0.3s infinite alternate; }
+        @keyframes bounce { from { transform: scale(1); } to { transform: scale(1.08); } }
 
         /* SUBTITLES */
         #subs-container {
-            margin: 20px 0; min-height: 60px; width: 80%; text-align: center;
-            color: #fff; font-size: 1.2rem; text-shadow: 0 0 10px #ff8800;
-            font-weight: 500;
+            margin: 20px 0; min-height: 80px; width: 85%; text-align: center;
+            color: #ffffff; font-size: 1.3rem; text-shadow: 0 0 12px #ff8800;
+            font-weight: bold;
         }
 
         /* INPUT AREA */
         .input-area { 
-            width: 90%; max-width: 500px; display: flex; gap: 10px; 
-            background: rgba(20,20,20,0.9); padding: 10px; 
-            border-radius: 50px; border: 2px solid #ff8800; 
+            width: 90%; max-width: 550px; display: flex; gap: 12px; 
+            background: #111; padding: 12px; border-radius: 60px; border: 2px solid #ff8800; 
         }
-        #textInput { background: none; border: none; color: white; flex: 1; padding: 10px; outline: none; font-size: 1rem; }
-        .send-btn { 
-            background: #ff8800; border: none; color: #000; padding: 10px 25px; 
-            border-radius: 50px; cursor: pointer; font-weight: bold; transition: 0.2s;
-        }
-        .send-btn:hover { background: #fff; }
+        #textInput { background: none; border: none; color: white; flex: 1; padding: 12px; outline: none; font-size: 1.1rem; }
+        .send-btn { background: #ff8800; border: none; color: #000; padding: 12px 25px; border-radius: 50px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .send-btn:hover { background: #fff; transform: scale(1.05); }
     </style>
 </head>
 <body>
 
-    <a href="home.html" class="back-link">← EXIT</a>
+    <a href="home.html" class="back-link">← HUB</a>
 
     <div class="name-tag">PUMPKIN</div>
 
@@ -80,10 +73,10 @@
         <div class="mouth-carve" id="mouth"></div>
     </div>
 
-    <div id="subs-container"></div>
+    <div id="subs-container">Click Send to Talk</div>
 
     <div class="input-area">
-        <input type="text" id="textInput" placeholder="Message Pumpkin..." autocomplete="off">
+        <input type="text" id="textInput" placeholder="Talk to Pumpkin..." autocomplete="off">
         <button class="send-btn" onclick="askPumpkin()">SEND</button>
     </div>
 
@@ -91,6 +84,7 @@
         const pumpkin = document.getElementById('pumpkinBody');
         const subs = document.getElementById('subs-container');
         const input = document.getElementById('textInput');
+        
         let KEY = localStorage.getItem("groq_key") || "";
 
         input.addEventListener("keypress", (e) => { if(e.key === "Enter") askPumpkin(); });
@@ -99,7 +93,7 @@
             const query = input.value.trim();
             if(!query) return;
             input.value = "";
-            subs.innerText = "...";
+            subs.innerText = "Thinking...";
 
             if(!KEY) {
                 KEY = prompt("Enter Groq Key:");
@@ -112,42 +106,37 @@
                     headers: { "Authorization": `Bearer ${KEY}`, "Content-Type": "application/json" },
                     body: JSON.stringify({
                         model: "llama-3.3-70b-versatile",
-                        messages: [{ 
-                            role: "system", 
-                            content: "You are Pumpkin. You are a cool, slightly edgy AI friend. Use slang like BOIII and cracked. Keep responses short and direct." 
-                        }, { role: "user", content: query }]
+                        messages: [{ role: "system", content: "You are Pumpkin. You are a clear-voiced, cool AI. Use slang like BOIII. Keep it short." }, { role: "user", content: query }]
                     })
                 });
                 const data = await response.json();
                 speak(data.choices[0].message.content);
-            } catch (err) { subs.innerText = "Error connecting, boii."; }
+            } catch (err) { subs.innerText = "System error, BOIII."; }
         }
 
         function speak(text) {
-            const synth = window.speechSynthesis;
+            window.speechSynthesis.cancel(); // Stop any overlapping voices
             const utter = new SpeechSynthesisUtterance(text);
             
             utter.onstart = () => {
                 pumpkin.classList.add('speaking');
                 subs.innerText = text;
             };
-            utter.onend = () => {
-                pumpkin.classList.remove('speaking');
-            };
+            utter.onend = () => pumpkin.classList.remove('speaking');
 
-            // Rudi Style Voice (Clear & Natural)
+            // NORMAL, CLEAR VOICE
             utter.pitch = 1.0; 
-            utter.rate = 1.0;  
+            utter.rate = 1.0; 
             
-            const voices = synth.getVoices();
-            // Specifically looks for a high-quality male voice
-            const clearVoice = voices.find(v => v.name.includes("Google US English") || v.name.includes("Male")) || voices[0];
-            utter.voice = clearVoice;
+            const voices = window.speechSynthesis.getVoices();
+            // Try to find a clear male voice (like Rudi)
+            const rudiVoice = voices.find(v => v.name.includes("Google US English") || v.name.includes("Male")) || voices[0];
+            utter.voice = rudiVoice;
 
-            synth.speak(utter);
+            window.speechSynthesis.speak(utter);
         }
 
-        // Pre-load voices
+        // Force browser to load voices properly
         window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
     </script>
 </body>
