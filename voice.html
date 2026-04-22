@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pumpkin AI | Voice</title>
+    <title>Pumpkin AI | Voice & Text</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { 
@@ -19,132 +19,139 @@
             overflow: hidden; 
         }
 
-        /* BACK BUTTON */
+        /* NAVIGATION & SETTINGS */
+        .top-bar {
+            position: fixed; top: 20px; width: 90%;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 100;
+        }
         .back-btn {
-            position: fixed; top: 20px; left: 20px;
             background: rgba(255, 136, 0, 0.1); border: 1px solid #ff8800; color: #ff8800;
             text-decoration: none; padding: 10px 20px; border-radius: 30px;
-            font-size: 0.8rem; font-weight: bold; z-index: 100; transition: 0.3s;
+            font-size: 0.8rem; font-weight: bold; transition: 0.3s;
         }
         .back-btn:hover { background: #ff8800; color: #000; box-shadow: 0 0 20px #ff8800; }
+        
+        .setting-toggle { cursor: pointer; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; border: 1px solid #444; padding: 8px 15px; border-radius: 20px; transition: 0.3s; }
+        .setting-toggle.on { border-color: #ff8800; color: #ff8800; }
 
         /* 3D STAGE */
-        .stage { width: 300px; height: 300px; perspective: 1000px; display: flex; justify-content: center; align-items: center; }
-        
+        .stage { width: 300px; height: 250px; perspective: 1000px; display: flex; justify-content: center; align-items: center; }
         .pumpkin-container {
-            width: 200px; height: 200px; position: relative;
+            width: 180px; height: 180px; position: relative;
             transform-style: preserve-3d;
             animation: float 4s infinite ease-in-out;
         }
-
-        /* THE PUMPKIN BODY */
         .pumpkin-sphere {
-            position: absolute; width: 200px; height: 180px;
+            position: absolute; width: 180px; height: 160px;
             background: radial-gradient(circle at 30% 30%, #ffaa33, #cc5500);
             border-radius: 50% 50% 45% 45%;
             box-shadow: inset -10px -10px 50px rgba(0,0,0,0.6), 0 0 40px rgba(255,136,0,0.3);
         }
+        .face { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; transform: translateZ(90px); }
+        .eyes { display: flex; gap: 40px; margin-bottom: 10px; }
+        .eye { width: 35px; height: 35px; background: #111; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); box-shadow: 0 0 15px #ffcc00; }
+        .mouth { width: 90px; height: 35px; background: #111; clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 80% 70%, 50% 100%, 20% 70%, 0% 100%); transition: 0.1s; }
 
-        /* CARVED FACE */
-        .face {
-            position: absolute; width: 100%; height: 100%;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transform: translateZ(100px); /* Brings face to front */
+        @keyframes float { 0%, 100% { transform: translateY(0) rotateY(-5deg); } 50% { transform: translateY(-15px) rotateY(5deg); } }
+        .talking .mouth { transform: scaleY(1.4); }
+
+        /* TEXT INPUT AREA */
+        .input-box { margin-top: 20px; display: flex; gap: 10px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 40px; border: 1px solid #333; width: 80%; max-width: 400px; }
+        .input-box input { background: none; border: none; color: white; flex: 1; padding-left: 15px; outline: none; font-size: 1rem; }
+        .send-btn { background: #ff8800; border: none; color: #000; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: bold; }
+
+        /* STATUS & SUBTITLES */
+        #status-text { margin-top: 15px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; opacity: 0.6; }
+        #subtitles { 
+            margin-top: 20px; color: #fff; font-size: 1.2rem; text-align: center; 
+            max-width: 80%; min-height: 1.5em; text-shadow: 0 0 10px #ff8800;
+            visibility: visible;
         }
-        .eyes { display: flex; gap: 50px; margin-bottom: 10px; }
-        .eye { 
-            width: 40px; height: 40px; background: #111; 
-            clip-path: polygon(50% 0%, 0% 100%, 100% 100%); 
-            box-shadow: 0 0 15px #ffcc00; 
+        #subtitles.hidden { visibility: hidden; }
+
+        .mic-btn {
+            width: 60px; height: 60px; border-radius: 50%; border: none;
+            background: #222; color: #ff8800; font-size: 1.2rem; cursor: pointer;
+            margin-top: 20px; border: 1px solid #ff8800; transition: 0.3s;
         }
-        .mouth { 
-            width: 100px; height: 40px; background: #111; 
-            clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 80% 70%, 50% 100%, 20% 70%, 0% 100%);
-            transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        /* ANIMATIONS */
-        @keyframes float { 0%, 100% { transform: translateY(0) rotateY(-10deg); } 50% { transform: translateY(-20px) rotateY(10deg); } }
-        .talking .mouth { transform: scaleY(1.5); }
-
-        /* UI ELEMENTS */
-        #status-text { margin-top: 30px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; }
-        #transcript { color: #888; font-size: 0.9rem; margin-top: 10px; max-width: 80%; text-align: center; height: 1.2em; }
-
-        .controls { margin-top: 40px; }
-        .mic-trigger {
-            width: 70px; height: 70px; border-radius: 50%; border: none;
-            background: #ff8800; color: #000; font-size: 1.5rem; cursor: pointer;
-            box-shadow: 0 0 20px rgba(255,136,0,0.5); transition: 0.3s;
-        }
-        .mic-trigger:hover { transform: scale(1.1); box-shadow: 0 0 40px #ff8800; }
-        .mic-trigger.listening { background: #ff4400; animation: pulse 1s infinite; }
-
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+        .mic-btn.listening { background: #ff4400; color: white; animation: pulse 1s infinite; }
     </style>
 </head>
 <body>
 
-    <a href="home.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> EXIT COSMOS</a>
+    <div class="top-bar">
+        <a href="home.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> EXIT</a>
+        <div id="subsToggle" class="setting-toggle on" onclick="toggleSubs()">Subs: ON</div>
+    </div>
 
     <div class="stage">
         <div class="pumpkin-container" id="pumpkin">
             <div class="pumpkin-sphere"></div>
             <div class="face">
-                <div class="eyes">
-                    <div class="eye"></div>
-                    <div class="eye"></div>
-                </div>
+                <div class="eyes"><div class="eye"></div><div class="eye"></div></div>
                 <div class="mouth" id="mouth"></div>
             </div>
         </div>
     </div>
 
-    <div id="status-text">Pumpkin AI Offline</div>
-    <div id="transcript">Click the mic to speak...</div>
+    <div id="subtitles">"What's good, BOIII?"</div>
+    <div id="status-text">Pumpkin AI standing on business</div>
 
-    <div class="controls">
-        <button class="mic-trigger" id="micBtn" onclick="toggleMic()">
-            <i class="fa-solid fa-microphone"></i>
-        </button>
+    <div class="input-box">
+        <input type="text" id="textInput" placeholder="Type to Pumpkin..." onkeydown="if(event.key==='Enter') handleTextSubmit()">
+        <button class="send-btn" onclick="handleTextSubmit()">SEND</button>
     </div>
 
+    <button class="mic-btn" id="micBtn" onclick="toggleMic()">
+        <i class="fa-solid fa-microphone"></i>
+    </button>
+
     <script>
-        const statusEl = document.getElementById('status-text');
-        const transcriptEl = document.getElementById('transcript');
-        const micBtn = document.getElementById('micBtn');
         const pumpkin = document.getElementById('pumpkin');
+        const subtitles = document.getElementById('subtitles');
+        const statusText = document.getElementById('status-text');
+        const textInput = document.getElementById('textInput');
         
         let GROQ_KEY = localStorage.getItem("groq_key") || "";
+        let showSubs = true;
 
-        // VOICE RECOGNITION SETUP
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         const recognition = SpeechRecognition ? new SpeechRecognition() : null;
         const synth = window.speechSynthesis;
 
-        if (recognition) {
-            recognition.continuous = false;
-            recognition.lang = 'en-US';
+        function toggleSubs() {
+            showSubs = !showSubs;
+            document.getElementById('subsToggle').innerText = `Subs: ${showSubs ? 'ON' : 'OFF'}`;
+            document.getElementById('subsToggle').classList.toggle('on');
+            subtitles.classList.toggle('hidden');
+        }
 
-            recognition.onstart = () => {
-                statusEl.innerText = "Pumpkin is Listening...";
-                micBtn.classList.add('listening');
-            };
+        async function handleTextSubmit() {
+            const val = textInput.value.trim();
+            if(!val) return;
+            textInput.value = "";
+            processInput(val);
+        }
 
-            recognition.onresult = async (event) => {
-                const text = event.results[0][0].transcript;
-                transcriptEl.innerText = `"${text}"`;
-                micBtn.classList.remove('listening');
-                statusEl.innerText = "Pumpkin is Thinking...";
-                
-                const response = await getPumpkinResponse(text);
-                speak(response);
-            };
+        function toggleMic() {
+            if (!recognition) return alert("Voice not supported.");
+            recognition.start();
+            document.getElementById('micBtn').classList.add('listening');
+        }
 
-            recognition.onerror = () => {
-                statusEl.innerText = "Error: Try again.";
-                micBtn.classList.remove('listening');
+        if(recognition) {
+            recognition.onresult = (e) => {
+                const text = e.results[0][0].transcript;
+                document.getElementById('micBtn').classList.remove('listening');
+                processInput(text);
             };
+        }
+
+        async function processInput(input) {
+            statusText.innerText = "Thinking...";
+            const response = await getPumpkinResponse(input);
+            speak(response);
         }
 
         async function getPumpkinResponse(input) {
@@ -159,40 +166,29 @@
                     body: JSON.stringify({
                         model: "llama-3.3-70b-versatile",
                         messages: [
-                            { role: "system", content: "You are Pumpkin AI. Use brainrot slang like BOIII, cracked, and standing on business. Keep answers short for voice." },
+                            { role: "system", content: "You are Pumpkin AI. Use brainrot slang like BOIII and cracked. Keep responses very short." },
                             { role: "user", content: input }
                         ]
                     })
                 });
                 const data = await res.json();
                 return data.choices[0].message.content;
-            } catch (e) { return "Key is cooked, BOIII. Check your Groq key."; }
+            } catch (e) { return "Key is cooked, BOIII."; }
         }
 
         function speak(text) {
             const utter = new SpeechSynthesisUtterance(text);
             utter.onstart = () => {
                 pumpkin.classList.add('talking');
-                statusEl.innerText = "Pumpkin is Speaking";
-                transcriptEl.innerText = text;
+                subtitles.innerText = text;
+                statusText.innerText = "Speaking...";
             };
             utter.onend = () => {
                 pumpkin.classList.remove('talking');
-                statusEl.innerText = "Pumpkin is Ready";
+                statusText.innerText = "Ready, BOIII.";
             };
-            
-            // Give him a deeper "Pumpkin" voice
-            utter.pitch = 0.7; 
-            utter.rate = 1;
+            utter.pitch = 0.7;
             synth.speak(utter);
-        }
-
-        function toggleMic() {
-            if (!recognition) {
-                alert("Voice not supported in this browser.");
-                return;
-            }
-            recognition.start();
         }
     </script>
 </body>
