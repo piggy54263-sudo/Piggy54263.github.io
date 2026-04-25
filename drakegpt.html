@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DrakeGPT</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: #050505; color: #32CD32; font-family: 'Segoe UI', sans-serif; display: flex; height: 100vh; margin: 0; overflow: hidden; }
+        
+        /* Sidebar Styles */
+        #sidebar { width: 260px; background: #0a0a0a; border-right: 1px solid #222; display: flex; flex-direction: column; padding: 15px; }
+        .sidebar-item { padding: 10px; margin-bottom: 5px; border-radius: 8px; cursor: pointer; transition: 0.3s; font-size: 0.9rem; color: #ccc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border: 1px solid transparent; }
+        .sidebar-item:hover { background: #1a1a1a; border-color: #32CD32; color: #fff; }
+        .sidebar-header { font-weight: bold; color: #32CD32; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; font-size: 0.8rem; }
+        
+        /* Main Chat Area */
+        #main-content { flex-grow: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
+        .back-btn { position: absolute; top: 15px; left: 15px; background: rgba(0, 0, 0, 0.8); border: 1px solid #32CD32; color: #32CD32; text-decoration: none; padding: 8px 15px; border-radius: 8px; font-size: 0.7rem; font-weight: bold; z-index: 9999; transition: 0.3s; display: flex; align-items: center; gap: 8px; text-transform: uppercase; }
+        .back-btn:hover { background: #32CD32; color: #000; box-shadow: 0 0 15px #32CD32; }
+
+        h1 { margin-top: 20px; text-transform: uppercase; letter-spacing: 5px; text-shadow: 0 0 10px #32CD32; font-size: 1.5rem; }
+        #chat-container { width: 95%; max-width: 800px; height: 70vh; background: rgba(15, 15, 15, 0.95); border: 1px solid #333; border-radius: 20px; margin-top: 10px; display: flex; flex-direction: column; box-shadow: 0 10px 50px rgba(0,0,0,1); }
+        #messages { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+        .msg { max-width: 80%; padding: 14px 18px; border-radius: 18px; line-height: 1.5; font-size: 0.95rem; word-wrap: break-word; }
+        .user-msg { align-self: flex-end; background: #32CD32; color: #000; font-weight: 600; border-bottom-right-radius: 2px; }
+        .ai-msg { align-self: flex-start; background: #1a1a1a; color: #fff; border: 1px solid #32CD32; border-bottom-left-radius: 2px; }
+        .msg img { max-width: 100%; border-radius: 10px; margin-top: 10px; border: 1px solid #32CD32; }
+
+        /* Input Controls */
+        .input-area { display: flex; padding: 20px; background: #0a0a0a; gap: 12px; border-top: 1px solid #222; align-items: center; }
+        .controls { display: flex; gap: 10px; margin-bottom: 10px; width: 95%; max-width: 800px; }
+        input[type="text"] { flex-grow: 1; background: #111; border: 1px solid #333; color: white; padding: 12px; border-radius: 12px; outline: none; }
+        input:focus { border-color: #32CD32; }
+        
+        button { background: #111; border: 1px solid #333; padding: 10px 15px; border-radius: 10px; color: #32CD32; cursor: pointer; transition: 0.3s; font-size: 0.8rem; }
+        button:hover { background: #32CD32; color: #000; }
+        #sendBtn { background: #32CD32; color: #000; font-weight: bold; border: none; }
+        
+        #fileInput { display: none; }
+        .upload-label { cursor: pointer; color: #32CD32; font-size: 1.2rem; margin-right: 5px; }
+    </style>
+</head>
+<body>
+
+    <div id="sidebar">
+        <div class="sidebar-header">DrakeGPT History</div>
+        <button onclick="newChat()"><i class="fa-solid fa-plus"></i> New Chat</button>
+        <div id="history-list" style="flex-grow: 1; overflow-y: auto; margin-top: 15px;"></div>
+        <button onclick="clearAllHistory()" style="color: #ff4444; border-color: #442222;"><i class="fa-solid fa-trash"></i> Clear All</button>
+    </div>
+
+    <div id="main-content">
+        <a href="home.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> HUB</a>
+        <h1><i class="fa-solid fa-robot"></i> DrakeGPT</h1>
+
+        <div class="controls">
+            <button onclick="manualSave()"><i class="fa-solid fa-floppy-disk"></i> Save Chat</button>
+            <button id="toggleAutoSave" onclick="toggleAutoSave()">Auto-Save: ON</button>
+        </div>
+
+        <div id="chat-container">
+            <div id="messages">
+                <div class="msg ai-msg" id="intro-msg">DrakeGPT online. Systems green. What's the move?</div>
+            </div>
+            <div class="input-area">
+                <input type="file" id="fileInput" accept="image/*" onchange="handleFileUpload()">
+                <label for="fileInput" class="upload-label"><i class="fa-solid fa-paperclip"></i></label>
+                <input type="text" id="userInput" placeholder="Ask DrakeGPT..." onkeydown="if(event.key==='Enter') sendMessage()">
+                <button id="sendBtn" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let GROQ_KEY = ""; 
+        let userStatus = localStorage.getItem("drake_user_status") || "unknown"; 
+        let chatHistory = [];
+        let autoSave = true;
+        let currentChatId = null;
+
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const text = input.value.trim();
+            if (!text) return;
+            input.value = '';
+
+            if (!GROQ_KEY) {
+                GROQ_KEY = prompt("Enter Groq API Key:");
+                if (!GROQ_KEY) return;
+            }
+
+            addMessage(text, 'user-msg');
+            chatHistory.push({ role: "user", content: text });
+
+            try {
+                const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                    method: "POST",
+                    headers: { "Authorization": `Bearer ${GROQ_KEY}`, "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        model: "llama-3.3-70b-versatile",
+                        messages: [{ 
+                            role: "system", 
+                            content: "You are DrakeGPT. You are an elite AI assistant specialized in math, science, and homework. You provide helpful, accurate advice and engage in friendly, high-energy conversation. Your favorite color is lime green." 
+                        }, ...chatHistory]
+                    })
+                });
+                const data = await response.json();
+                const aiResponse = data.choices[0].message.content;
+                addMessage(aiResponse, 'ai-msg');
+                chatHistory.push({ role: "assistant", content: aiResponse });
+                
+                if (autoSave) manualSave();
+            } catch (e) {
+                addMessage("Error connecting to systems. Check your API key.", 'ai-msg');
+            }
+        }
+
+        function addMessage(text, type, imgSrc = null) {
+            const chatBox = document.getElementById('messages');
+            const div = document.createElement('div');
+            div.className = `msg ${type}`;
+            div.innerText = text;
+            if (imgSrc) {
+                const img = document.createElement('img');
+                img.src = imgSrc;
+                div.appendChild(img);
+            }
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        async function handleFileUpload() {
+            const file = document.getElementById('fileInput').files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64Image = e.target.result;
+                addMessage("", "user-msg", base64Image);
+                chatHistory.push({ role: "user", content: [
+                    { type: "text", text: "[Image Sent]" },
+                    { type: "image_url", image_url: { url: base64Image } }
+                ]});
+                if(autoSave) manualSave();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function toggleAutoSave() {
+            autoSave = !autoSave;
+            document.getElementById('toggleAutoSave').innerText = `Auto-Save: ${autoSave ? 'ON' : 'OFF'}`;
+        }
+
+        function manualSave() {
+            if (chatHistory.length === 0) return;
+            let savedChats = JSON.parse(localStorage.getItem('drake_saved_chats') || '[]');
+            if (!currentChatId) {
+                currentChatId = Date.now();
+                const title = chatHistory[0].content.toString().substring(0, 25) || "New Chat";
+                savedChats.push({ id: currentChatId, title: title, history: chatHistory });
+            } else {
+                const index = savedChats.findIndex(c => c.id === currentChatId);
+                savedChats[index].history = chatHistory;
+            }
+            localStorage.setItem('drake_saved_chats', JSON.stringify(savedChats));
+            loadSidebar();
+        }
+
+        function loadSidebar() {
+            const list = document.getElementById('history-list');
+            list.innerHTML = '';
+            let savedChats = JSON.parse(localStorage.getItem('drake_saved_chats') || '[]');
+            savedChats.reverse().forEach(chat => {
+                const item = document.createElement('div');
+                item.className = 'sidebar-item';
+                item.innerHTML = `<i class="fa-regular fa-message"></i> ${chat.title}`;
+                item.onclick = () => loadChat(chat.id);
+                list.appendChild(item);
+            });
+        }
+
+        function loadChat(id) {
+            let savedChats = JSON.parse(localStorage.getItem('drake_saved_chats') || '[]');
+            const chat = savedChats.find(c => c.id === id);
+            if (chat) {
+                currentChatId = chat.id;
+                chatHistory = chat.history;
+                const chatBox = document.getElementById('messages');
+                chatBox.innerHTML = '';
+                chatHistory.forEach(msg => {
+                    if (Array.isArray(msg.content)) {
+                        addMessage(msg.content[0].text, msg.role === 'user' ? 'user-msg' : 'ai-msg', msg.content[1]?.image_url?.url);
+                    } else {
+                        addMessage(msg.content, msg.role === 'user' ? 'user-msg' : 'ai-msg');
+                    }
+                });
+            }
+        }
+
+        function newChat() {
+            currentChatId = null;
+            chatHistory = [];
+            document.getElementById('messages').innerHTML = '<div class="msg ai-msg">New session started. Let\'s get to work.</div>';
+        }
+
+        function clearAllHistory() {
+            if (confirm("Delete all DrakeGPT chats?")) {
+                localStorage.removeItem('drake_saved_chats');
+                newChat();
+                loadSidebar();
+            }
+        }
+
+        window.onload = loadSidebar;
+    </script>
+</body>
+</html>
