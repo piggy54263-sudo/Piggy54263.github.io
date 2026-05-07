@@ -100,7 +100,6 @@
             reader.onload = function(e) {
                 const base64Image = e.target.result;
                 addMessage("", "user-msg", base64Image);
-                // In vision models, we'd send the base64, but for this logic we store the intent
                 chatHistory.push({ role: "user", content: [
                     { type: "text", text: "[Sent an Image]" },
                     { type: "image_url", image_url: { url: base64Image } }
@@ -121,7 +120,6 @@
                 if (!GROQ_KEY) return;
             }
 
-            // Status overrides
             if (text === "boi boi its me") { userStatus = "luke"; localStorage.setItem("luke_user_status", "luke"); location.reload(); return; }
             if (text === "RANDOM") { userStatus = "random"; localStorage.setItem("luke_user_status", "random"); location.reload(); return; }
 
@@ -133,8 +131,9 @@
                     method: "POST",
                     headers: { "Authorization": `Bearer ${GROQ_KEY}`, "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        model: "llama-3.3-70b-versatile", // Vision capable
-                        messages: [{ role: "system", content: `You are Luke-ai. Status: ${userStatus}. Use slang (BOIII, cracked, business). You can see images.` }, ...chatHistory]
+                        model: "llama-3.3-70b-versatile",
+                        // UPDATED SYSTEM PROMPT BELOW TO SHORTEN RESPONSES
+                        messages: [{ role: "system", content: `You are Luke-ai. Status: ${userStatus}. Use slang (BOIII, cracked, business). Keep responses extremely short (1-2 sentences max). Do not yap.` }, ...chatHistory]
                     })
                 });
                 const data = await response.json();
@@ -162,7 +161,6 @@
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
-        // Saving and History Logic
         function manualSave() {
             if (chatHistory.length === 0) return;
             let savedChats = JSON.parse(localStorage.getItem('luke_saved_chats') || '[]');
