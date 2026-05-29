@@ -17,16 +17,14 @@
             position: relative;
         }
 
-        /* Animated Stars Background */
         #stars-canvas {
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
             z-index: 0;
-            opacity: 0.7;
+            opacity: 0.75;
         }
 
-        /* Sidebar Styles */
         #sidebar { 
             width: 260px; 
             background: rgba(10, 10, 10, 0.95); 
@@ -40,7 +38,6 @@
         .sidebar-item:hover { background: #1a1a1a; border-color: #00d4ff; color: #fff; }
         .sidebar-header { font-weight: bold; color: #00d4ff; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; font-size: 0.8rem; }
 
-        /* Main Content */
         #main-content { 
             flex-grow: 1; 
             display: flex; 
@@ -79,9 +76,24 @@
             border-top: 1px solid #222; 
             align-items: center; 
         }
-        .controls { display: flex; gap: 10px; margin-bottom: 10px; width: 95%; max-width: 800px; }
-        input[type="text"] { flex-grow: 1; background: #111; border: 1px solid #333; color: white; padding: 12px; border-radius: 12px; outline: none; }
-        input:focus { border-color: #00d4ff; }
+        .controls { 
+            display: flex; 
+            gap: 8px; 
+            margin-bottom: 10px; 
+            width: 95%; 
+            max-width: 800px; 
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        select, input[type="range"] { 
+            background: #111; 
+            color: #00d4ff; 
+            border: 1px solid #333; 
+            padding: 8px; 
+            border-radius: 8px; 
+        }
+        input[type="range"] { width: 140px; }
+        .temp-display { font-size: 0.85rem; color: #00d4ff; min-width: 50px; }
 
         button { background: #111; border: 1px solid #333; padding: 10px 15px; border-radius: 10px; color: #00d4ff; cursor: pointer; transition: 0.3s; font-size: 0.8rem; }
         button:hover { background: #00d4ff; color: #000; }
@@ -103,12 +115,19 @@
         <h1><i class="fa-solid fa-brain"></i> Luke-ai</h1>
 
         <div class="controls">
-            <select id="provider" onchange="updateEndpoint()" style="background:#111; color:#00d4ff; border:1px solid #333; padding:8px; border-radius:8px;">
+            <select id="provider" onchange="updateProvider()">
                 <option value="groq">Groq</option>
                 <option value="openai">OpenAI</option>
                 <option value="together">Together.ai</option>
                 <option value="openrouter">OpenRouter</option>
             </select>
+
+            <select id="model"></select>
+
+            <label style="color:#00d4ff; font-size:0.85rem;">Temp:</label>
+            <input type="range" id="temperature" min="0" max="2" step="0.1" value="0.8" oninput="updateTempDisplay()">
+            <span id="temp-value" class="temp-display">0.8</span>
+
             <button onclick="manualSave()"><i class="fa-solid fa-floppy-disk"></i> Save Chat</button>
             <button id="toggleAutoSave" onclick="toggleAutoSave()">Auto-Save: ON</button>
         </div>
@@ -132,13 +151,13 @@
         let chatHistory = [];
         let autoSave = true;
         let currentChatId = null;
+        let temperature = 0.8;
 
-        // Provider config
         const providers = {
-            groq: { base: "https://api.groq.com/openai/v1", model: "llama-3.3-70b-versatile" },
-            openai: { base: "https://api.openai.com/v1", model: "gpt-4o-mini" },
-            together: { base: "https://api.together.xyz/v1", model: "meta-llama/Llama-3.3-70B-Instruct-Turbo" },
-            openrouter: { base: "https://openrouter.ai/api/v1", model: "anthropic/claude-3.5-sonnet" }
+            groq: { base: "https://api.groq.com/openai/v1", models: ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"] },
+            openai: { base: "https://api.openai.com/v1", models: ["gpt-4o-mini", "gpt-4o"] },
+            together: { base: "https://api.together.xyz/v1", models: ["meta-llama/Llama-3.3-70B-Instruct-Turbo", "Qwen/Qwen2.5-72B-Instruct"] },
+            openrouter: { base: "https://openrouter.ai/api/v1", models: ["anthropic/claude-3.5-sonnet", "meta-llama/llama-3.3-70b-instruct"] }
         };
 
         let currentProvider = "groq";
@@ -146,6 +165,8 @@
         window.onload = () => {
             loadSidebar();
             createStars();
+            updateProvider();
+            
             const intro = document.getElementById('intro-msg');
             if (userStatus === "luke") intro.innerText = "Welcome back, Luke. Standing on business, BOIII.";
             else if (userStatus === "jhoey") intro.innerText = "Greetings, Jhoey. Systems active.";
@@ -164,68 +185,74 @@
             resize();
             window.addEventListener('resize', resize);
 
-            const stars = [];
-            for (let i = 0; i < 800; i++) {
-                stars.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    size: Math.random() * 2.2,
-                    speed: Math.random() * 0.015 + 0.005
-                });
-            }
+            const stars = Array.from({length: 800}, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 2.2,
+                speed: Math.random() * 0.018 + 0.006
+            }));
 
             function animate() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = "#ffffff";
-
                 stars.forEach(star => {
-                    ctx.globalAlpha = Math.random() * 0.8 + 0.4;
+                    ctx.globalAlpha = Math.random() * 0.6 + 0.5;
                     ctx.fillRect(star.x, star.y, star.size, star.size);
                     star.y += star.speed;
                     if (star.y > canvas.height) star.y = 0;
                 });
-
                 requestAnimationFrame(animate);
             }
             animate();
         }
 
-        function updateEndpoint() {
+        function updateProvider() {
             currentProvider = document.getElementById('provider').value;
+            const modelSelect = document.getElementById('model');
+            modelSelect.innerHTML = '';
+            providers[currentProvider].models.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m;
+                opt.textContent = m.length > 35 ? m.slice(0, 32) + "..." : m;
+                modelSelect.appendChild(opt);
+            });
+        }
+
+        function updateTempDisplay() {
+            temperature = parseFloat(document.getElementById('temperature').value);
+            document.getElementById('temp-value').textContent = temperature.toFixed(1);
         }
 
         async function sendMessage() {
             const input = document.getElementById('userInput');
             const text = input.value.trim();
             if (!text) return;
+
+            // Clear input immediately
             input.value = '';
 
+            // Show user message FIRST
+            addMessage(text, 'user-msg');
+            chatHistory.push({ role: "user", content: text });
+
             if (!API_KEY) {
-                API_KEY = prompt("Enter your API Key:");
+                API_KEY = prompt(`Enter your ${currentProvider.toUpperCase()} API Key:`);
                 if (!API_KEY) return;
             }
 
             // Secret commands
-            if (text === "boi boi its me") { 
-                userStatus = "luke"; 
-                localStorage.setItem("luke_user_status", "luke"); 
-                location.reload(); 
-                return; 
+            if (text.toLowerCase() === "boi boi its me") { 
+                userStatus = "luke"; localStorage.setItem("luke_user_status", "luke"); location.reload(); return; 
             }
-            if (text === "RANDOM") { 
-                userStatus = "random"; 
-                localStorage.setItem("luke_user_status", "random"); 
-                location.reload(); 
-                return; 
+            if (text.toLowerCase() === "random") { 
+                userStatus = "random"; localStorage.setItem("luke_user_status", "random"); location.reload(); return; 
             }
-
-            addMessage(text, 'user-msg');
-            chatHistory.push({ role: "user", content: text });
 
             const config = providers[currentProvider];
+            const selectedModel = document.getElementById('model').value;
 
             try {
-                const response = await fetch(`${config.base}/chat/completions`, {
+                const res = await fetch(`${config.base}/chat/completions`, {
                     method: "POST",
                     headers: { 
                         "Authorization": `Bearer ${API_KEY}`, 
@@ -233,36 +260,118 @@
                         ...(currentProvider === "openrouter" && { "HTTP-Referer": "https://luke.ai" })
                     },
                     body: JSON.stringify({
-                        model: config.model,
+                        model: selectedModel,
+                        temperature: temperature,
+                        max_tokens: 500,
                         messages: [
-                            { 
-                                role: "system", 
-                                content: `You are Luke-ai. Status: ${userStatus}. Use slang (BOIII, cracked, business). Keep responses extremely short (1-2 sentences max). Do not yap.` 
-                            },
+                            { role: "system", content: `You are Luke-ai. Status: ${userStatus}. Use slang (BOIII, cracked, business). Keep responses extremely short (1-2 sentences max).` },
                             ...chatHistory
                         ]
                     })
                 });
 
-                const data = await response.json();
+                const data = await res.json();
+                if (data.error) throw new Error(data.error.message);
+
                 const aiResponse = data.choices[0].message.content;
                 addMessage(aiResponse, 'ai-msg');
                 chatHistory.push({ role: "assistant", content: aiResponse });
                 
                 if (autoSave) manualSave();
             } catch (e) {
+                console.error(e);
                 addMessage("Bro why you lie'n thats the wrong key BOIII.", 'ai-msg');
             }
         }
 
-        // Rest of your functions (same as before)
-        function handleFileUpload() { /* ... same as your original */ }
-        function addMessage(text, type, imgSrc = null) { /* ... same */ }
-        function manualSave() { /* ... same */ }
-        function loadSidebar() { /* ... same */ }
-        function loadChat(id) { /* ... same */ }
-        function newChat() { /* ... same */ }
-        function clearAllHistory() { /* ... same */ }
+        function handleFileUpload() {
+            const file = document.getElementById('fileInput').files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const base64 = e.target.result;
+                addMessage("[Image]", "user-msg", base64);
+                chatHistory.push({ role: "user", content: [{type:"text", text:"[Sent an Image]"}, {type:"image_url", image_url:{url: base64}}] });
+                if(autoSave) manualSave();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function addMessage(text, type, imgSrc = null) {
+            const chatBox = document.getElementById('messages');
+            const div = document.createElement('div');
+            div.className = `msg ${type}`;
+            div.textContent = text;
+            if (imgSrc) {
+                const img = document.createElement('img');
+                img.src = imgSrc;
+                div.appendChild(img);
+            }
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // === Rest of functions (manualSave, loadSidebar, etc.) ===
+        function manualSave() {
+            if (chatHistory.length === 0) return;
+            let savedChats = JSON.parse(localStorage.getItem('luke_saved_chats') || '[]');
+            if (!currentChatId) {
+                currentChatId = Date.now();
+                const title = (chatHistory[0].content || "").toString().substring(0, 25) || "New Chat";
+                savedChats.push({ id: currentChatId, title, history: chatHistory });
+            } else {
+                const index = savedChats.findIndex(c => c.id === currentChatId);
+                if (index > -1) savedChats[index].history = chatHistory;
+            }
+            localStorage.setItem('luke_saved_chats', JSON.stringify(savedChats));
+            loadSidebar();
+        }
+
+        function loadSidebar() {
+            const list = document.getElementById('history-list');
+            list.innerHTML = '';
+            let savedChats = JSON.parse(localStorage.getItem('luke_saved_chats') || '[]');
+            savedChats.reverse().forEach(chat => {
+                const item = document.createElement('div');
+                item.className = 'sidebar-item';
+                item.innerHTML = `<i class="fa-regular fa-message"></i> ${chat.title}`;
+                item.onclick = () => loadChat(chat.id);
+                list.appendChild(item);
+            });
+        }
+
+        function loadChat(id) {
+            let savedChats = JSON.parse(localStorage.getItem('luke_saved_chats') || '[]');
+            const chat = savedChats.find(c => c.id === id);
+            if (chat) {
+                currentChatId = chat.id;
+                chatHistory = chat.history;
+                const chatBox = document.getElementById('messages');
+                chatBox.innerHTML = '';
+                chatHistory.forEach(msg => {
+                    if (Array.isArray(msg.content)) {
+                        addMessage(msg.content[0].text, msg.role === 'user' ? 'user-msg' : 'ai-msg', msg.content[1]?.image_url?.url);
+                    } else {
+                        addMessage(msg.content, msg.role === 'user' ? 'user-msg' : 'ai-msg');
+                    }
+                });
+            }
+        }
+
+        function newChat() {
+            currentChatId = null;
+            chatHistory = [];
+            document.getElementById('messages').innerHTML = '<div class="msg ai-msg">New session started. Standing on business.</div>';
+        }
+
+        function clearAllHistory() {
+            if (confirm("Delete all saved chats?")) {
+                localStorage.removeItem('luke_saved_chats');
+                newChat();
+                loadSidebar();
+            }
+        }
+
         function toggleAutoSave() {
             autoSave = !autoSave;
             document.getElementById('toggleAutoSave').innerText = `Auto-Save: ${autoSave ? 'ON' : 'OFF'}`;
