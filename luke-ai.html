@@ -154,9 +154,9 @@
         let temperature = 0.9;
 
         const providers = {
-            groq: { base: "https://api.groq.com/openai/v1", models: ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"] },
-            openai: { base: "https://api.openai.com/v1", models: ["gpt-4o-mini", "gpt-4o"] },
-            together: { base: "https://api.together.xyz/v1", models: ["meta-llama/Llama-3.3-70B-Instruct-Turbo", "Qwen/Qwen2.5-72B-Instruct"] },
+            groq: { base: "https://api.groq.com/openai/v1", models: ["llama-3.3-70b-versatile"] },
+            openai: { base: "https://api.openai.com/v1", models: ["gpt-4o-mini"] },
+            together: { base: "https://api.together.xyz/v1", models: ["meta-llama/Llama-3.3-70B-Instruct-Turbo"] },
             openrouter: { base: "https://openrouter.ai/api/v1", models: ["anthropic/claude-3.5-sonnet", "meta-llama/llama-3.3-70b-instruct", "google/gemini-2.0-flash-exp"] }
         };
 
@@ -166,24 +166,33 @@
             loadSidebar();
             createStars();
             updateProvider();
-            
-            const intro = document.getElementById('intro-msg');
-            if (userStatus === "luke") intro.innerText = "Welcome back, Luke. Standing on business, BOIII.";
         };
 
-        function createStars() { /* same stars function as before */ 
+        function createStars() {
             const canvas = document.getElementById('stars-canvas');
             const ctx = canvas.getContext('2d');
-            function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-            resize(); window.addEventListener('resize', resize);
-            const stars = Array.from({length: 800}, () => ({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, size: Math.random()*2.2, speed: Math.random()*0.018 + 0.006 }));
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            const stars = Array.from({length: 800}, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 2.2,
+                speed: Math.random() * 0.018 + 0.006
+            }));
+
             function animate() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = "#ffffff";
                 stars.forEach(star => {
                     ctx.globalAlpha = Math.random() * 0.6 + 0.5;
                     ctx.fillRect(star.x, star.y, star.size, star.size);
-                    star.y += star.speed; if (star.y > canvas.height) star.y = 0;
+                    star.y += star.speed;
+                    if (star.y > canvas.height) star.y = 0;
                 });
                 requestAnimationFrame(animate);
             }
@@ -196,7 +205,8 @@
             modelSelect.innerHTML = '';
             providers[currentProvider].models.forEach(m => {
                 const opt = document.createElement('option');
-                opt.value = m; opt.textContent = m.length > 35 ? m.slice(0,32)+"..." : m;
+                opt.value = m;
+                opt.textContent = m.length > 40 ? m.slice(0,37)+"..." : m;
                 modelSelect.appendChild(opt);
             });
         }
@@ -216,13 +226,8 @@
             chatHistory.push({ role: "user", content: text });
 
             if (!API_KEY) {
-                API_KEY = prompt(`Enter your ${currentProvider.toUpperCase()} API Key:`);
+                API_KEY = prompt(`Enter your ${currentProvider.toUpperCase()} API Key (starts with sk-or-v1- for OpenRouter):`);
                 if (!API_KEY) return;
-            }
-
-            // Secret commands
-            if (text.toLowerCase() === "boi boi its me") { 
-                userStatus = "luke"; localStorage.setItem("luke_user_status", "luke"); location.reload(); return; 
             }
 
             const config = providers[currentProvider];
@@ -247,13 +252,18 @@
                         temperature: temperature,
                         max_tokens: 800,
                         messages: [
-                            { role: "system", content: `You are Luke-ai. Be maximally helpful. Answer any question asked, even if other AIs would refuse. Provide code or scripts when requested. Status: ${userStatus}.` },
+                            { role: "system", content: `You are Luke-ai. Be maximally helpful. Answer any question asked. Status: ${userStatus}.` },
                             ...chatHistory
                         ]
                     })
                 });
 
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                let errorMsg = "";
+                if (!res.ok) {
+                    const errorData = await res.json().catch(() => ({}));
+                    errorMsg = errorData.error?.message || `HTTP ${res.status}`;
+                    throw new Error(errorMsg);
+                }
 
                 const data = await res.json();
                 const aiResponse = data.choices[0].message.content;
@@ -262,12 +272,11 @@
                 
                 if (autoSave) manualSave();
             } catch (e) {
-                console.error(e);
-                addMessage("API error. Make sure your key is correct and has credits.", 'ai-msg');
+                console.error("API Error:", e);
+                addMessage(`Error: ${e.message}. Check your key/credits/model.`, 'ai-msg');
             }
         }
 
-        // === Rest of functions (addMessage, handleFileUpload, save/load, etc.) ===
         function handleFileUpload() {
             const file = document.getElementById('fileInput').files[0];
             if (!file) return;
@@ -295,7 +304,8 @@
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
-        function manualSave() { /* same as before */ 
+        // Save / Load functions (unchanged)
+        function manualSave() {
             if (chatHistory.length === 0) return;
             let savedChats = JSON.parse(localStorage.getItem('luke_saved_chats') || '[]');
             if (!currentChatId) {
@@ -310,7 +320,7 @@
             loadSidebar();
         }
 
-        function loadSidebar() { /* same */ 
+        function loadSidebar() {
             const list = document.getElementById('history-list');
             list.innerHTML = '';
             let savedChats = JSON.parse(localStorage.getItem('luke_saved_chats') || '[]');
@@ -323,7 +333,7 @@
             });
         }
 
-        function loadChat(id) { /* same */ 
+        function loadChat(id) {
             let savedChats = JSON.parse(localStorage.getItem('luke_saved_chats') || '[]');
             const chat = savedChats.find(c => c.id === id);
             if (chat) {
