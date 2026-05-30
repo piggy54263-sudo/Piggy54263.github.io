@@ -157,7 +157,16 @@
             groq: { base: "https://api.groq.com/openai/v1", models: ["llama-3.3-70b-versatile"] },
             openai: { base: "https://api.openai.com/v1", models: ["gpt-4o-mini"] },
             together: { base: "https://api.together.xyz/v1", models: ["meta-llama/Llama-3.3-70B-Instruct-Turbo"] },
-            openrouter: { base: "https://openrouter.ai/api/v1", models: ["anthropic/claude-3.5-sonnet", "meta-llama/llama-3.3-70b-instruct", "google/gemini-2.0-flash-exp"] }
+            openrouter: { 
+                base: "https://openrouter.ai/api/v1", 
+                models: [
+                    "anthropic/claude-opus-4.8-fast",
+                    "anthropic/claude-opus-4.8",
+                    "anthropic/claude-3.5-sonnet",
+                    "meta-llama/llama-3.3-70b-instruct",
+                    "google/gemini-2.0-flash-exp"
+                ] 
+            }
         };
 
         let currentProvider = "openrouter";
@@ -226,7 +235,7 @@
             chatHistory.push({ role: "user", content: text });
 
             if (!API_KEY) {
-                API_KEY = prompt(`Enter your ${currentProvider.toUpperCase()} API Key (starts with sk-or-v1- for OpenRouter):`);
+                API_KEY = prompt(`Enter your ${currentProvider.toUpperCase()} API Key:`);
                 if (!API_KEY) return;
             }
 
@@ -258,11 +267,9 @@
                     })
                 });
 
-                let errorMsg = "";
                 if (!res.ok) {
-                    const errorData = await res.json().catch(() => ({}));
-                    errorMsg = errorData.error?.message || `HTTP ${res.status}`;
-                    throw new Error(errorMsg);
+                    const err = await res.json().catch(() => ({}));
+                    throw new Error(err.error?.message || `HTTP ${res.status}`);
                 }
 
                 const data = await res.json();
@@ -272,8 +279,8 @@
                 
                 if (autoSave) manualSave();
             } catch (e) {
-                console.error("API Error:", e);
-                addMessage(`Error: ${e.message}. Check your key/credits/model.`, 'ai-msg');
+                console.error(e);
+                addMessage(`Error: ${e.message}`, 'ai-msg');
             }
         }
 
@@ -304,7 +311,6 @@
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
-        // Save / Load functions (unchanged)
         function manualSave() {
             if (chatHistory.length === 0) return;
             let savedChats = JSON.parse(localStorage.getItem('luke_saved_chats') || '[]');
