@@ -160,7 +160,7 @@
             openrouter: { 
                 base: "https://openrouter.ai/api/v1", 
                 models: [
-                    "anthropic/claude-opus-4.8-fast",
+                    "anthropic/claude-opus-4.8-fast",     // ← Top of list
                     "anthropic/claude-opus-4.8",
                     "anthropic/claude-3.5-sonnet",
                     "meta-llama/llama-3.3-70b-instruct",
@@ -174,7 +174,7 @@
         window.onload = () => {
             loadSidebar();
             createStars();
-            updateProvider();
+            updateProvider();   // This populates the models
         };
 
         function createStars() {
@@ -212,13 +212,18 @@
             currentProvider = document.getElementById('provider').value;
             const modelSelect = document.getElementById('model');
             modelSelect.innerHTML = '';
+            
             providers[currentProvider].models.forEach(m => {
                 const opt = document.createElement('option');
                 opt.value = m;
-                opt.textContent = m.length > 40 ? m.slice(0,37)+"..." : m;
+                // Make Claude Opus more visible
+                opt.textContent = m.includes("claude-opus-4.8-fast") ? "🎯 Claude Opus 4.8 (Fast)" : 
+                                 (m.length > 40 ? m.slice(0,37)+"..." : m);
                 modelSelect.appendChild(opt);
             });
         }
+
+        // ... (the rest of the script is the same as the previous version - sendMessage, addMessage, etc.)
 
         function updateTempDisplay() {
             temperature = parseFloat(document.getElementById('temperature').value);
@@ -284,6 +289,7 @@
             }
         }
 
+        // Add the remaining functions (handleFileUpload, addMessage, manualSave, loadSidebar, loadChat, newChat, clearAllHistory, toggleAutoSave) from the previous version
         function handleFileUpload() {
             const file = document.getElementById('fileInput').files[0];
             if (!file) return;
